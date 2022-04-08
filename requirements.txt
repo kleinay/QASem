@@ -1,0 +1,8 @@
+nltk
+pandas
+tqdm
+# for predicate detector
+transformers==4.15.0
+torch>=1.4
+sklearn
+# Docassemble-Pattern # for candidate extraction, if ones wished to replicate the construction of affixes-heuristic verb--nom pairs list (verb_to_nom.py):
