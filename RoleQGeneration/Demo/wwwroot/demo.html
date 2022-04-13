@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link href="https://nlp.biu.ac.il/~plroit/roleqs/demo.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0 container mb-3">
+    <div class="px-5 py-2 my-4 text-center">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-3 fw-bold">
+                    Asking It All: Generating Contextualized Questions for any Semantic
+                    Role</h1>
+                <div class="col-lg-9 mx-auto">
+                    <p class="lead">A demo website for the <a class="text-reset" href="https://arxiv.org/abs/2109.04832" target="_blank">paper</a> by Valentina Pyatkin, Paul Roit, Julian
+                            Michael, Reut Tsarfaty, Yoav Goldberg and Ido Dagan of the Natural Language Processing
+                        labs
+                        of Bar-Ilan University and University of
+                        Washington.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-1">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header"><a id="input_text_link" class="text-reset" href="#"
+                                            data-bs-target="#input_text_card" data-bs-toggle="collapse"><h6
+                        class="card-title text-muted">Write a sentence:</h6></a>
+                </div>
+                <div class="card-body collapse show" id="input_text_card">
+                    <div class="input-group">
+                        <input type="text" id="the_text" class="form-control" list="example_sentences"
+                               placeholder="Click for examples" oninput="on_new_text()"/>
+                        <datalist id="example_sentences">
+                            <option value="The New Zealanders performed a Haka , but it did not bring victory .">
+                            <option value="To bring a little more light to the world is what I want , out of all of this .">
+                                <!--                            <option value="But having sat in the legislature now for eight years , I think there 's going to be pressure to bring this back this next session &#45;&#45; some sort of version .">-->
+                            <option value="The MD-88 , operating as flight 1086 , was flying in from Atlanta when it lost control after landing .">
+                            <option value="He is accused of leaking classified information and there is no question his actions have inflicted serious harms on our national security">
+                            <option value="Another flight , flying between Haneda Airport and Matsuyama said the pilot 's side window in the cockpit suffered a crack .">
+                        </datalist>
+                        <!--                        <label class="input-group-text">120 chars left</label>-->
+                        <button class="btn btn-outline-primary px-4" type="button" id="btn_apply" onclick="on_apply()">
+                            <span id="apply_loaded" class="spinner-border spinner-border-sm invisible" role="status"
+                                  aria-hidden="true"></span>
+                            Apply
+                            <!--                            <span id="apply_loaded" class="" role="status" aria-hidden="true">Apply</span>-->
+                            <!--                            <span id="apply_loading" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true">Loading...</span>-->
+                        </button>
+                        <!--                        <button class="btn btn-primary" type="button" disabled>-->
+                        <!--                            <span cla ss="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>-->
+                        <!--                            Loading...-->
+                        <!--                        </button>-->
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-9 form-text">Make sure to include some eventive or actionable verbs or
+                            deverbial
+                            nouns,
+                            e.g. sale, organize, study, application, etc..
+                        </div>
+                        <div class="col-sm-3 text-end"><span
+                                class="badge  text-white bg-secondary"><span id="chars_left"> </span>chars left</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header">
+                    <a id="main_text_link" href="#" class="text-reset" data-bs-toggle="collapse"
+                       data-bs-target="#main_text_card">
+                        <h6 class="card-title text-muted">Select predicate and sense:
+                            <span id="main_text_spinner"
+                                  class="spinner-border spinner-border-md float-end invisible"></span></h6>
+                    </a>
+                </div>
+                <div class="card-body collapse" id="main_text_card">
+                    <p id="main_text" class="lh-lg fs-5 bg-light text-dark px-3 mb-0"></p>
+                    <div class="collapse mt-3" id="sense_disambig_card">
+                        <div class="card border-sec">
+                            <div class="card-header border-sec"><h6>Let's disambiguate the sense: </h6></div>
+                            <div class="card-body">
+                                <div class="list-group" id="lst_rolesets">
+                                </div>
+                                <a id="sense_disambig_link" href="#sense_disambig_card" data-bs-toggle="collapse"
+                                   role="button"
+                                   class="text-muted fw-light ps-1">collapse</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-striped mt-3">
+                        <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Description</th>
+                            <th>Question</th>
+                            <th>Prototype</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody_questions">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header">
+                    <a id="prototype_link" href="#" class="text-reset" data-bs-toggle="collapse"
+                       data-bs-target="#prototype_card">
+                        <h6 class="card-title text-muted">Build your prototype question:</h6>
+                    </a>
+                </div>
+                <div class="card-body collapse" id="prototype_card">
+                    <div>
+                        <label for="prototype_question" class="form-label h6">Prototype question:</label>
+                        <div class="input-group">
+                            <input id="prototype_question" type="text" class="form-control form-control-lg" readonly/>
+                            <button id="btn_submit_prototype" disabled
+                                    onclick="on_prototype_submit()" class="btn btn-outline-primary"
+                                    type="button"><span id="prototype_spinner"
+                                                        class="spinner-border spinner-border-sm invisible" role="status"
+                                                        aria-hidden="true"></span> Submit
+                            </button>
+                        </div>
+                        <div class="form-text">Select one item of each field below, and a verb-sense if required, then
+                            click on submit.
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row align-items-center justify-content-center mt-3">
+                        <div class="ms-4">
+                            <div class="btn-group-vertical align-items-center" role="group">
+                                <input type="radio" class="btn-check question_slot" name="btn_wh" id="wh_what"
+                                       autocomplete="off" value="What">
+                                <label class="btn btn-outline-primary mb-1" for="wh_what">What</label>
+
+                                <input type="radio" class="btn-check question_slot" name="btn_wh" id="wh_where"
+                                       autocomplete="off" value="Where">
+                                <label class="btn btn-outline-primary mb-1" for="wh_where">Where</label>
+
+                                <input type="radio" class="btn-check question_slot" name="btn_wh" id="wh_when"
+                                       autocomplete="off" value="When">
+                                <label class="btn btn-outline-primary mb-1" for="wh_when">When</label>
+
+                                <input type="radio" class="btn-check question_slot" name="btn_wh" id="wh_how"
+                                       autocomplete="off" value="How">
+                                <label class="btn btn-outline-primary mb-1" for="wh_how">How</label>
+
+                                <input type="radio" class="btn-check question_slot" name="btn_wh" id="wh_howmch"
+                                       autocomplete="off" value="How much">
+                                <label class="btn btn-outline-primary mb-1" for="wh_howmch">How much</label>
+
+                                <input type="radio" class="btn-check question_slot" name="btn_wh" id="wh_why"
+                                       autocomplete="off" value="Why">
+                                <label class="btn btn-outline-primary mb-1" for="wh_why">Why</label>
+                            </div>
+                        </div>
+                        <div class="ms-4">
+                            <div class="btn-group-vertical" role="group">
+                                <input type="radio" class="btn-check question_slot" value="---" name="btn_aux"
+                                       id="aux_none" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="aux_none">---</label>
+
+                                <input type="radio" class="btn-check question_slot" value="does" name="btn_aux"
+                                       id="aux_does" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="aux_does">does</label>
+                            </div>
+                        </div>
+                        <div class="ms-4 align-items-center">
+                            <div class="btn-group-vertical" role="group">
+                                <input type="radio" class="btn-check question_slot" value="---" name="btn_sbj"
+                                       id="sbj_none" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="sbj_none">---</label>
+
+                                <input type="radio" class="btn-check question_slot" value="something" name="btn_sbj"
+                                       id="sbj_something"
+                                       autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="sbj_something">something</label>
+                            </div>
+                        </div>
+                        <div class="ms-4 align-items-center">
+                            <input type="radio" class="btn-check question_slot" checked disabled value="VERB"
+                                   name="btn_verb"
+                                   id="btn_verb" autocomplete="off">
+                            <label id="btn_verb_label" class="btn btn-outline-primary mb-1 text-center" for="btn_verb">VERB</label>
+
+                        </div>
+                        <div class="ms-4 align-items-center">
+                            <div class="btn-group-vertical" role="group">
+                                <input type="radio" class="btn-check question_slot" value="---" name="btn_obj"
+                                       id="obj_none" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="obj_none">---</label>
+
+                                <input type="radio" class="btn-check question_slot" value="something" name="btn_obj"
+                                       id="obj_something"
+                                       autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="obj_something">something</label>
+                            </div>
+                        </div>
+                        <div class="ms-4 align-items-center">
+                            <div class="btn-group-vertical" role="group">
+                                <input type="radio" class="btn-check question_slot" value="---" name="btn_prep"
+                                       id="prep_none" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="prep_none">---</label>
+
+                                <input type="radio" class="btn-check question_slot" value="to" name="btn_prep"
+                                       id="prep_to" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="prep_to">to</label>
+
+                                <input type="radio" class="btn-check question_slot" value="on" name="btn_prep"
+                                       id="prep_on" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="prep_on">on</label>
+
+                                <input type="radio" class="btn-check question_slot" value="for" name="btn_prep"
+                                       id="prep_for" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="prep_for">for</label>
+
+                                <input type="radio" class="btn-check question_slot" value="from" name="btn_prep"
+                                       id="prep_from" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="prep_from">from</label>
+
+                                <input type="radio" class="btn-check question_slot" value="with" name="btn_prep"
+                                       id="prep_with" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="prep_with">with</label>
+                            </div>
+                        </div>
+                        <div class="ms-4 align-items-center">
+                            <div class="btn-group-vertical" role="group">
+                                <input type="radio" class="btn-check question_slot" value="---" name="btn_obj2"
+                                       id="obj2_none" autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="obj2_none">---</label>
+
+                                <input type="radio" class="btn-check question_slot" value="something" name="btn_obj2"
+                                       id="obj2_something"
+                                       autocomplete="off">
+                                <label class="btn btn-outline-primary mb-1" for="obj2_something">something</label>
+
+                                <input type="radio" class="btn-check question_slot" name="btn_obj2"
+                                       id="obj2_do_something"
+                                       autocomplete="off" value="do something">
+                                <label class="btn btn-outline-primary mb-1" for="obj2_do_something">do
+                                    something</label>
+                            </div>
+                        </div>
+                        <div class="ms-4 align-items-center">
+                            <button class="btn btn-outline-primary" disabled>?</button>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <label for="contextualized_label" class="form-label h6">Contextualized question:</label>
+                        <input id="contextualized_question" type="text" class="form-control form-control-lg" readonly
+                               id="contextualized_label"
+                               value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer d-flex flex-wrap mt-auto justify-content-between align-items-center py-3 border-top">
+    <div class="col-md-6 d-flex align-items-center">
+        <!--      <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">-->
+        <!--        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>-->
+        <!--      </a>-->
+        <img src="biu_logo_transparent.png" class="ms-3"
+             style="display: inline; max-height: 3rem; height:auto; width: auto">
+        <span class="text-muted ms-5">Accepted to EMNLP 2021</span>
+        <span class="ms-4">Demo made by <a href="https://valentinapy.github.io/" target="_blank" class="text-reset">Valentina Pyatkin</a> and <a href="https://www.paulroit.com" class="text-reset" target="_blank">Paul Roit</a> </span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex pe-4">
+        <li class="px-2"><a class="text-muted" href="https://github.com/ValentinaPy/RoleQGeneration">
+            Paper<img class="px-1" src="newspaper.png" style="max-height:1.5rem;height: auto;width: auto">
+        </a></li>
+        <li class="px-2"><a class="text-muted" href="https://github.com/ValentinaPy/RoleQGeneration">
+            Code<img class="px-1" src="GitHub-Mark-32px.png" style="max-height:1.5rem;height: auto;width: auto">
+        </a></li>
+    </ul>
+</footer>
+<template id="template_roleset">
+    <button class="list-group-item list-group-item-action"></button>
+</template>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+<script src="https://nlp.biu.ac.il/~plroit/roleqs/demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+.predicate_token {
+    text-decoration-line: underline!important;
+    text-decoration-style: double;
+    text-decoration-color: deeppink;
+    cursor: pointer;
+}
+.predicate_token:hover {
+    background-color: darkorange;
+    /*font-weight: bolder;*/
+}
+.card-header {
+    /*background-color: rgb(3, 169, 244);*/
+    border-color: rgb(3, 169, 244);
+    padding-bottom: 0.1rem;
+}
+.card {
+    border-color: rgb(3, 169, 244);
+}
+
+.border-sec {
+    border-color: rgb(63, 81, 181);
+}

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .cursor-grabbing {
+            cursor: grabbing;
+        }
+    </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+<body class="container">
+<div class="row mt-1">
+    <div class="accordion p-0" id="instructions">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="instruction_header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#instructions_body"
+                        aria-expanded="false" aria-controls="instructions_body">
+                    Instructions (Click to collapse)
+                </button>
+            </h2>
+            <div id="instructions_body" class="accordion-collapse collapse show" aria-labelledby="instruction_header"
+                 data-bs-parent="#instructions">
+                <div class="accordion-body">
+                    Your task is to assess the quality of questions we show you given a certain passage.
+                    You will be shown a passage in which you can see a word highlighted in bold. This word is the target
+                    you should focus on for evaluating the questions. Note that there might be duplicate questions, e.g. the same
+                    question might appear multiple times: Don't worry about these cases, simply annotate them all in the same way.
+                    The following are the steps you need to carry out:
+                    <br><strong><span style="font-size: medium; ">Process</span></strong>
+                    <br>
+                    <ol>
+                        <li>Read the passage carefully.</li>
+                        <li>For each question</li>
+                        <ul>
+                            <li class="instr_rating">Rate how <span style="background-color:#AED6F1">adequate</span> the
+                                question is according to the text. This means: How well does the question fit the
+                                passage and target? Here we don't care whether or not the question has an answer in the passage.
+                                Instead we want to know whether the question targets the correct predicate, whether the question body contains the appropriate elements from the passage, whether
+                                the question is written in the correct tense and whether the Who/What is appropriate for the entity it's asking about. Depending on how many adequacy mistakes are found in the question it looses in adequacy points.
+                            </li>
+                            <li class="instr_rating">Rate how <span style="background-color:#AED6F1">well-phrased and grammatical</span>
+                                the question is. This means: Rate whether the question sounds fluent and natural,
+                                without any errors.
+                            </li>
+                            <li class="instr_role_desc">Select a <span
+                                    style="background-color:#AED6F1">description</span> for that question. The
+                                description should describe the answer to the question. It does not matter whether or
+                                not the answer actually appears in the passage.
+                            </li>
+                            <li class="instr_qa"> Answer the question by highlighting an appropriate answer in the
+                                text. Note: the answer might also be found in another sentence!
+                            </li>
+                            <li class="instr_qa"> If the answer cannot be resolved from the text mark it as unanswerable.
+                            </li>
+                        </ul>
+                    </ol>
+                    <br> We will now provide you with a couple of examples of things to look out for:
+                    <div class="instr_rating">
+                        <br><strong>Examples for assessing how adequate a question is</strong>:
+                        <br> Here we are interested whether the content of the question fits the passage. You could ask
+                        yourself: Is this a question someone could ask after having read the passage?
+                        <br> Note: If a question does not have an answer in the passage does not mean it is not
+                        adequate! For example
+                        <br><u>Passage</u>: Tom brought a present to Anna and Ben <b>brought</b> a cake.
+                        <br><u>Question</u>: Why did Ben bring a cake?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: Note how there are two
+                        ‘brought’ in the passage, but only one of them is
+                        highlighted. The question is Entirely Adequate because it asks about the highlighted 'brought'. It can
+                        not be answered from the given passage, but it still fits the passage.
+                        <br>
+                        <br>Other example:
+                        <br><u>Passage</u>: Ben will <b>bring</b> a cake to the party.
+                        <br><u>Question</u>: Why did Ben bring a cake?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: This question targets the relevant target
+                        and fits the passage with "Ben" and "a cake". But it does not fit the passage in terms of the tense used! The passage is written
+                        in future tense and the question is asking about something in the past.
+                        <br>
+                        <br>Other example:
+                        <br><u>Passage</u>: The guests opened the presents, while waiting for Ben to <b>bring</b> a cake to the party.
+                        <br><u>Question</u>: Why did Ben bring the presents?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: This question has probelms with adequacy since "the presents" does not belong to the predicate in that passage.<br>
+                        <br>Other example:
+                        <br><u>Passage</u>: Anna kissed Ben.
+                        <br><u>Question</u>: What might Anna kiss?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: This question has problems with adequacy since "What" should have been "Who" and the tense also doesn't fit the passage.
+
+                    </div>
+                    <div class="instr_rating">
+                        <br><strong>Examples for assessing how well-phrased and grammatical a question is</strong>:
+                        <br>Here you need to check whether the question has any grammatical errors. For example:
+                        <br><u>Passage</u>: Tom took a <b>flight</b> to New York.
+                        <br><u>Question</u>: Where did Tom flying from?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: While the question makes
+                        sense (e.g. it is an adequate question!), it is ungrammatical and it should be 'Where did Tom
+                        fly from?'
+                        <br>
+                    </div>
+                    <div class="instr_role_desc">
+                        <br><strong>Examples for choosing the description(s)</strong>:
+                        <br>We want to know what a question is asking about and for this we are showing you a couple of
+                        options. Choose those that fit best.
+                        <br><u>Passage</u>: Ben <b>brought</b> a cake.
+                        <br><u>Description</u>: Bringer
+                        <br><u>Description</u>: Thing brought
+                        <br><u>Description</u>: Person or entity the thing is brought to.
+                        <br><u>Question</u>: Who brought a cake?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: This question asks about
+                        the person bringing something, so the most suitable description to choose would be 'Bringer'.
+                        <br><u>Question</u>: What did Ben bring?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: This question asks about
+                        the thing being brought, so the most suitable description to choose would be 'Thing brought'.
+                        <br><u>Question</u>: Who did Ben bring a cake to?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: This question asks about
+                        the person receiving the thing being brought, so the most suitable description to choose would
+                        be 'Person or entity the thing is brought to'.
+                    </div>
+                    <div class="instr_qa">
+                        <br><strong>Examples for answering questions</strong>:
+                        <br><strong>Example 1</strong>:
+                        <br><u>Passage</u>: Tom brought a present to Anna and Ben <b>brought</b> a cake.
+                        <br><u>Question</u>: What was brought?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: Note how there are two
+                        ‘brought’ in the passage, but only one of them is
+                        highlighted. You should choose the answer that fits the highlighted word. “A cake” is the
+                        correct
+                        answer and not “a present”.
+
+                        <br><strong>Example 2</strong>:
+                        <br><u>Passage</u>: Tom took a <b>flight</b> to New York.
+                        <br><u>Question</u>: Where did Tom fly from?
+                        <br><u><span style="background-color:#AED6F1">Explanation</span></u>: While the question makes
+                        sense, it is not possible to answer this question
+                        given this passage, therefore you should mark it as “is unanswerable from the text”.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="card px-0">
+        <div class="card-header">
+            Please read the following passage and answer the questions below
+        </div>
+        <div class="card-body">
+            <p class="card-text lh-base fs-2" id="par_text"></p>
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div hidden class="border border-danger border-4 bg-light fs-5" id="validation_container"></div>
+</div>
+<div class="row mt-2">
+    <form class="card px-0" id="mturk_form" method="post">
+        <input type="hidden" id="assignmentId" name="assignmentId"/>
+        <input type="hidden" id="results_input" name="results_input"/>
+
+        <div class="card-header">
+            Please evaluate the following questions.
+        </div>
+
+        <div id="questions_container">
+        </div>
+
+        <!--USE THE FOLLOWING DIVS TO POPULATE DATA FROM MTURK (SINGLE CSV ROW)-->
+        <input type="hidden" id="doc_id" value="${doc_id}"/>
+        <input type="hidden" id="sent_id" value="${sent_id}"/>
+        <input type="hidden" id="experiment_type" value="${experiment_type}"/>
+        <div hidden id="inp_questions">${questions}</div>
+        <div hidden id="inp_text">${text}</div>
+        <div hidden id="inp_roles">${roles}</div>
+        <div hidden id="inp_role_descriptions">${role_descriptions}</div>
+        <div hidden id="inp_predicate_span">${predicate_span}</div>
+    </form>
+</div>
+
+<template id="question_container_template">
+    <div class="card cursor-pointer my-2 mx-1 p-1" id="question_container_role">
+        <input type="hidden" name="answer_span" value="0:0" id="answer_span_role"/>
+        <div class="input-group">
+            <span id="question_idx_role" class="input-group-text fw-bold">question_idx</span>
+            <span id="question_role"
+                  class="form-control lh-base fw-italic fs-5">question</span>
+        </div>
+        <div class="row" id="rating_container_role">
+            <div class="col-6">
+                <div class="mx-3 form-label lh-base fs-5 mt-3">How <span class="fw-bold">adequate</span> is the
+                    question for the text? <small>(Questions without an answer in the passage are not automatically inadequate, please refer to the instructions.)</small>
+                </div>
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" value="1" name="adequacy_opts_role" id="adequacy_1_role"/>
+                    <label class="btn btn-outline-danger text-dark fw-bolder" for="adequacy_1_role">Absolutely inadequate</label>
+
+                    <input type="radio" class="btn-check" value="2" name="adequacy_opts_role" id="adequacy_2_role"/>
+                    <label class="btn btn-outline-warning text-dark fw-bolder" for="adequacy_2_role">Mostly inadequate</label>
+
+                    <input type="radio" class="btn-check" value="3" name="adequacy_opts_role" id="adequacy_3_role"/>
+                    <label class="btn btn-outline-secondary text-dark fw-bolder" for="adequacy_3_role">Boderline adequate</label>
+
+                    <input type="radio" class="btn-check" value="4" name="adequacy_opts_role" id="adequacy_4_role"/>
+                    <label class="btn btn-outline-primary text-dark fw-bolder" for="adequacy_4_role">Mostly adequate</label>
+
+                    <input type="radio" class="btn-check" value="5" name="adequacy_opts_role" id="adequacy_5_role"/>
+                    <label class="btn btn-outline-success text-dark fw-bolder" for="adequacy_5_role">Entirely adequate</label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="mx-3 form-label lh-base fs-5 mt-3">How <span
+                        class="fw-bold">well-phrased and grammatical</span>
+                    is the
+                    question?<br/><br/><br/>
+                </div>
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" value="1" name="fluency_opts_role" id="fluency_1_role"/>
+                    <label class="btn btn-outline-danger text-dark fw-bolder" for="fluency_1_role">Entirely incorrect</label>
+
+                    <input type="radio" class="btn-check" value="2" name="fluency_opts_role" id="fluency_2_role"/>
+                    <label class="btn btn-outline-warning text-dark fw-bolder" for="fluency_2_role">Mostly incorrect</label>
+
+                    <input type="radio" class="btn-check" value="3" name="fluency_opts_role" id="fluency_3_role"/>
+                    <label class="btn btn-outline-secondary text-dark fw-bolder" for="fluency_3_role">Somewhat incorrect</label>
+
+                    <input type="radio" class="btn-check" value="4" name="fluency_opts_role" id="fluency_4_role"/>
+                    <label class="btn btn-outline-primary text-dark fw-bolder" for="fluency_4_role">Mostly correct</label>
+
+                    <input type="radio" class="btn-check" value="5" name="fluency_opts_role" id="fluency_5_role"/>
+                    <label class="btn btn-outline-success text-dark fw-bolder" for="fluency_5_role">Absolutely correct</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="answer_container_role">
+            <div class="input-group my-2">
+                <span class="input-group-text">Answer: </span>
+                <input type="text" readonly class="form-control bg-light" disabled id="answer_role"
+                       placeholder="Click on the text to mark an answer. Note: the answer might also be found in another sentence!">
+                <button class="btn btn-outline-secondary" type="button" id="btn_clear_role">clear</button>
+            </div>
+            <div class="input-group mb-3">
+                <input type="radio" class="btn-check" name="has_answer_options_role" id="no_answer_role"
+                       autocomplete="off">
+                <label class="btn btn-outline-danger mx-1" for="no_answer_role">The question is unanswerable from
+                    the
+                    text.</label>
+            </div>
+        </div>
+
+        <div class="row" id="descriptions_overall_container">
+            <label class="mx-3 form-label lh-base fs-5 mt-3">Please select the most suitable description(s) of
+                what this question asks about (a possible answer).</label>
+            <div id="descriptions_container"></div>
+        </div>
+
+
+    </div>
+</template>
+<template id="token_template">
+    <span id="tok_idx" class="text-token"></span>
+</template>
+<template id="desc_template">
+    <div class="col-6">
+        <input type="checkbox" class="btn-check" name="description_opts_on_role2" id="desc_role1_btn_on_role2"/>
+        <label class="btn btn-outline-secondary w-100" for="desc_role1_btn_on_role2">The person or entity that
+            receives the
+            thing</label>
+    </div>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+<script>
+    function $id(id) {
+        return document.getElementById(id);
+    }
+
+    function populate_field_from_mturk(field_name, default_data) {
+        let field_value = $id('inp_' + field_name).innerHTML;
+        if (field_value.startsWith("${")) {
+            field_value = default_data[field_name];
+        }
+        return field_value;
+    }
+
+    function initialize_state() {
+        let inp_questions = populate_field_from_mturk("questions", DEBUG_DATA);
+        let inp_text = populate_field_from_mturk("text", DEBUG_DATA);
+        let inp_roles = populate_field_from_mturk("roles", DEBUG_DATA);
+        let inp_descriptions = populate_field_from_mturk("role_descriptions", DEBUG_DATA);
+        let inp_pred_span = populate_field_from_mturk("predicate_span", DEBUG_DATA);
+        let doc_id = $id("doc_id").value
+        let sent_id = $id("sent_id").value
+        let exp_type = $id("experiment_type").value
+        let tokens = inp_text.match(/\S+/g)
+        let questions = inp_questions.split("~!~");
+        let roles = inp_roles.split("~!~");
+        let role_descriptions = inp_descriptions.split("~!~");
+        let predicate_idx = parseInt(inp_pred_span.split(":")[0])
+
+        let roleset = questions.map(function (question, idx) {
+            return {
+                "question": question,
+                "role": roles[idx],
+                // "description": descriptions[idx],
+                "answer_span": "-1:-1", // -1:-1 for not set, 0:0 for set to no-answer.
+                'idx': idx,
+                'adequacy': -1,
+                'fluency': -1,
+                'descriptions': [] // selected descriptions for this item.
+            }
+        });
+        return {
+            "doc_id": doc_id,
+            "sent_id": sent_id,
+            "experiment_type": exp_type,
+            "tokens": tokens,
+            "roleset": roleset,
+            "role_descriptions": role_descriptions,
+            "predicate_idx": predicate_idx,
+            "active_question_idx": 0,
+            "clicked_token_idx": -1,
+            "active_span": [-1, -1],
+            "get": function (role) {
+                return this.roleset.filter(item => item.role === role)[0];
+            }
+            // "highlighted_spans": []
+        };
+    }
+
+    function fill_text_highlighting() {
+        let [start, end] = the_state.active_span;
+        for (let idx = 0; idx < the_state.tokens.length; idx++) {
+            let is_in_span = start <= idx && idx < end;
+            let tok_elt = $id("tok_" + idx.toString());
+            if (is_in_span) {
+                tok_elt.classList.add("bg-warning");
+            } else {
+                tok_elt.classList.remove("bg-warning");
+            }
+        }
+    }
+
+    function fill_answer_field(role, span) {
+        let [start, end] = span
+        let answer_tokens = the_state.tokens.slice(start, end)
+        let answer = answer_tokens.join(" ");
+        let answer_elt = $id("answer_" + role)
+        answer_elt.value = answer
+        answer_elt.classList.remove('bg-light');
+        answer_elt.classList.add('bg-warning');
+        answer_elt.classList.remove("text-decoration-line-through")
+
+        let no_answer = $id("no_answer_" + role);
+        no_answer.checked = false;
+        setTimeout(() => {
+            answer_elt.classList.remove('bg-warning');
+            answer_elt.classList.add('bg-light');
+        }, 2000);
+    }
+
+    function highlight_active_question() {
+        let border_classes = ["border", "border-primary", "border-2"]
+        the_state.roleset.forEach((item, idx) => {
+            let question_container = $id("question_container_" + item.role);
+            let is_active = idx === the_state.active_question_idx;
+            if (is_active) {
+                border_classes.forEach(bc => question_container.classList.add(bc));
+            } else {
+                border_classes.forEach(bc => question_container.classList.remove(bc));
+            }
+        });
+    }
+
+    function move_to_next_question() {
+        let idx = the_state.active_question_idx;
+        let n_roles = the_state.roleset.length;
+        let next_idx = (idx + 1) % n_roles;
+        setTimeout(() => {
+            the_state.active_question_idx = next_idx;
+            highlight_active_question();
+        }, 500)
+    }
+
+    function token_hovered(event) {
+        if (the_state.clicked_token_idx === -1) {
+            return;
+        }
+
+        let tok_id = event.currentTarget.id;
+        let entered_idx = parseInt(tok_id.split("_")[1])
+        let span_start_idx = Math.min(entered_idx, the_state.clicked_token_idx);
+        let span_end_idx = Math.max(entered_idx, the_state.clicked_token_idx) + 1;
+        let new_span = [span_start_idx, span_end_idx]
+        the_state.active_span = new_span
+        fill_text_highlighting()
+    }
+
+    function token_clicked(event) {
+        let tok_id = event.currentTarget.id;
+        let clicked_idx = parseInt(tok_id.split("_")[1])
+        let token_elts = document.querySelectorAll(".text-token");
+        if (the_state.clicked_token_idx === -1) {
+            the_state.clicked_token_idx = clicked_idx;
+            the_state.active_span = [clicked_idx, clicked_idx + 1]
+            // should grab all text tokens and change their cursor.
+            token_elts.forEach(tok_elt => tok_elt.classList.toggle("cursor-pointer"));
+            token_elts.forEach(tok_elt => tok_elt.classList.toggle("cursor-grabbing"));
+        } else {
+            let active_item = the_state.roleset[the_state.active_question_idx]
+            let span_start_idx = Math.min(clicked_idx, the_state.clicked_token_idx);
+            let span_end_idx = Math.max(clicked_idx, the_state.clicked_token_idx) + 1;
+            let new_span = [span_start_idx, span_end_idx]
+            active_item.answer_span = span_start_idx.toString() + ":" + span_end_idx.toString();
+            the_state.active_span = [-1, -1];
+            the_state.clicked_token_idx = -1;
+            token_elts.forEach(tok_elt => tok_elt.classList.toggle("cursor-grabbing"));
+            token_elts.forEach(tok_elt => tok_elt.classList.toggle("cursor-pointer"));
+            fill_answer_field(active_item.role, new_span)
+            // move_to_next_question()
+        }
+        fill_text_highlighting()
+    }
+
+    function button_clear_clicked(event) {
+        let clicked_role = event.target.id.split("_").slice(-1)[0]
+        let item = the_state.get(clicked_role);
+        item.answer_span = "-1:-1";
+
+        $id("no_answer_" + clicked_role).checked = false;
+        // fill with empty, returns to the original state
+        fill_answer_field(item.role, [0, 0]);
+    }
+
+    function question_container_clicked(event) {
+        if (!event.currentTarget.id.startsWith("question_container")) {
+            return
+        }
+        let role = event.currentTarget.id.split("_").slice(-1)[0];
+        let new_idx = the_state.roleset.findIndex(item => item.role === role);
+        setTimeout(() => {
+            the_state.active_question_idx = new_idx;
+            highlight_active_question();
+        }, 300);
+    }
+
+    function populate_text() {
+        let token_template = $id("token_template");
+        let the_paragraph = $id("par_text")
+        the_state.tokens.forEach((token, idx) => {
+            let token_elt = token_template.content.cloneNode(true);
+            the_paragraph.appendChild(token_elt)
+            token_elt = the_paragraph.lastElementChild
+            token_elt.id = "tok_" + idx.toString();
+            token_elt.innerText = token;
+            the_paragraph.appendChild(document.createTextNode(" "));
+        });
+        if (settings.enable_answer_highlighting) {
+            the_state.tokens.forEach((token, idx) => {
+                let token_elt = $id("tok_" + idx.toString());
+                token_elt.onclick = token_clicked;
+                token_elt.onmouseenter = token_hovered;
+                token_elt.classList.add("cursor-pointer")
+            });
+        }
+
+        let predicate_elt = $id("tok_" + the_state.predicate_idx.toString());
+        predicate_elt.classList.add("fw-bold");
+    }
+
+    function populate_question(item, idx) {
+        let role = item.role
+        let question_container_template = $id("question_container_template")
+        let question_container = question_container_template.content.cloneNode(true)
+
+        // Add another option for NONE_OF_THE_ABOVE
+        let n_descriptions = the_state.role_descriptions.length + 1;
+        // Put 2 descriptions in each row
+        let n_desc_rows = Math.ceil(n_descriptions / 2);
+        let desc_container = question_container.querySelector("#descriptions_container");
+        // create the rows
+        for (let i = 0; i < n_desc_rows; i++) {
+            let row_elt = document.createElement("div")
+            row_elt.classList.add("row")
+            row_elt.classList.add("mb-2")
+            desc_container.appendChild(row_elt);
+        }
+        the_state.role_descriptions.forEach((role_desc, idx) => {
+            let desc_elt = $id("desc_template").content.cloneNode(true);
+            // desc_no_2_for_btn_on_role2
+            let id = "desc_no_" + idx.toString() + "_for_btn_on_" + role;
+            let desc_input = desc_elt.querySelector("input")
+            desc_input.id = id;
+            desc_input.name = "description_opts_" + role;
+            desc_input.value = idx;
+            let desc_label = desc_elt.querySelector("label")
+            desc_label.htmlFor = id;
+            desc_label.innerText = role_desc;
+            desc_input.onchange = description_changed;
+            let row_idx = Math.floor(idx / 2);
+            let row_elt = desc_container.childNodes[row_idx];
+            row_elt.appendChild(desc_elt)
+        });
+        let last_row = desc_container.childNodes[n_desc_rows - 1];
+        // none of the above.
+        let nota_elt = $id("desc_template").content.cloneNode(true);
+        nota_elt.querySelector("input").id = "nota_" + role
+        nota_elt.querySelector("input").name = "description_opts_" + role;
+        nota_elt.querySelector("label").htmlFor = "nota_" + role;
+        nota_elt.querySelector("label").innerText = "None of the above";
+        nota_elt.querySelector("label").classList.remove("btn-outline-secondary")
+        nota_elt.querySelector("label").classList.add("btn-outline-danger")
+        nota_elt.querySelector("input").onchange = nota_changed;
+        last_row.appendChild(nota_elt);
+
+        question_container.id = "question_container_" + role;
+        let role_ids = [
+            'question_container_role', 'answer_span_role', 'answer_role', 'answer_container_role',
+            'question_role', 'question_idx_role',
+            'btn_clear_role',
+            'adequacy_1_role', 'adequacy_2_role', 'adequacy_3_role', 'adequacy_4_role', 'adequacy_5_role',
+            'fluency_1_role', 'fluency_2_role', 'fluency_3_role', 'fluency_4_role', 'fluency_5_role',
+            'no_answer_role'];
+
+        role_ids.forEach(elt_id => {
+            question_container.querySelector("#" + elt_id).id = elt_id.replace("role", role);
+        });
+        question_container.querySelectorAll("input").forEach(input_elt => {
+            input_elt.name = input_elt.name.replace("role", role);
+        });
+        question_container.querySelectorAll("label").forEach(label_elt => {
+            label_elt.htmlFor = label_elt.htmlFor.replace("role", role);
+        });
+        question_container.querySelector("#question_idx_" + role).innerText = (idx + 1).toString();
+        question_container.querySelector("#question_" + role).innerText = item.question;
+        question_container.querySelector("#btn_clear_" + role).onclick = button_clear_clicked;
+        question_container.querySelector("#no_answer_" + role).onclick = no_answer_clicked;
+        [1, 2, 3, 4, 5].forEach(idx => {
+            let adq_id = "#adequacy_" + idx.toString() + "_" + role
+            question_container.querySelector(adq_id).onclick = adequacy_changed;
+            let flt_id = "#fluency_" + idx.toString() + "_" + role
+            question_container.querySelector(flt_id).onclick = fluency_changed;
+        })
+
+        if (!settings.enable_answer_highlighting) {
+            question_container.querySelector("#answer_container_" + role).hidden = true;
+        }
+
+        if (!settings.enable_role_descriptions) {
+            question_container.querySelector("#descriptions_overall_container").hidden = true;
+        }
+
+        if (!settings.enable_question_rating) {
+            question_container.querySelector("#rating_container_role").hidden = true;
+        }
+
+        return question_container;
+    }
+
+    function description_changed(event) {
+        let clicked_role = event.currentTarget.id.split("_").slice(-1)[0]
+        let selected_value = event.currentTarget.value;
+        let is_checked = event.currentTarget.checked
+        let item = the_state.get(clicked_role);
+        // guard conditions in case we have recursion by having the NOTA click automatically trigger changes
+        // in the values of the inputs
+
+        if (is_checked && !item.descriptions.includes(selected_value)) {
+            item.descriptions.push(selected_value);
+            if (item.descriptions.includes("nota")) {
+                item.descriptions.splice(item.descriptions.indexOf("nota"), 1);
+            }
+        } else if (item.descriptions.includes(selected_value)) {
+            let idx = item.descriptions.indexOf(selected_value);
+            item.descriptions.splice(idx, 1);
+        }
+
+        $id("nota_" + clicked_role).checked = false;
+    }
+
+    function nota_changed(event) {
+        let clicked_role = event.currentTarget.id.split("_").slice(-1)[0]
+        let is_checked = $id("nota_" + clicked_role).checked;
+        if (!is_checked) {
+            return;
+        }
+        let item = the_state.get(clicked_role);
+        item.descriptions = ["nota"];
+        // remove all other checked states
+        the_state.role_descriptions.forEach((item, idx) => {
+            $id("desc_no_" + idx.toString() + "_for_btn_on_" + clicked_role).checked = false;
+        });
+    }
+
+    function adequacy_changed(event) {
+        let clicked_role = event.currentTarget.id.split("_").slice(-1)[0];
+        let score = parseInt(event.currentTarget.value);
+        the_state.get(clicked_role).adequacy = score;
+    }
+
+    function fluency_changed(event) {
+        let clicked_role = event.currentTarget.id.split("_").slice(-1)[0];
+        let score = parseInt(event.currentTarget.value);
+        the_state.get(clicked_role).fluency = score;
+    }
+
+    function no_answer_clicked(event) {
+        let clicked_role = event.currentTarget.id.split("_").slice(-1)[0]
+        let the_item = the_state.get(clicked_role)
+        let [start, end] = the_item.answer_span.split(":");
+        start = parseInt(start);
+        end = parseInt(end);
+        if (event.currentTarget.checked && end > start) {
+            $id('answer_' + clicked_role).classList.add("text-decoration-line-through")
+        }
+        the_item.answer_span = "0:0"
+    }
+
+    function populate_questions() {
+        let questions_div = $id('questions_container');
+        the_state.roleset.forEach((item, idx) => {
+            let question_container_elt = populate_question(item, idx);
+            questions_div.appendChild(question_container_elt);
+            question_container_elt = questions_div.lastElementChild;
+            question_container_elt.id = "question_container_" + item.role;
+            question_container_elt.onclick = question_container_clicked;
+        });
+    }
+
+    function submit() {
+        // we create another form because the form in the HTML layout has many
+        // redundant inputs (radio buttons) that we're not really interested in.
+        // Just take the resutls directly from the state variable.
+
+        // create the form element and point it to the correct endpoint
+        const urlParams = new URLSearchParams(window.location.search)
+        const form = document.createElement('form')
+        form.action = (new URL('mturk/externalSubmit', urlParams.get('turkSubmitTo'))).href
+        form.method = 'post'
+
+        // attach the assignmentId
+        const inputAssignmentId = document.createElement('input')
+        inputAssignmentId.name = 'assignmentId'
+        inputAssignmentId.value = urlParams.get('assignmentId')
+        inputAssignmentId.hidden = true
+        form.appendChild(inputAssignmentId)
+
+        // attach data I want to send back
+        const results = document.createElement('input')
+        results.name = 'results'
+        results.value = JSON.stringify(the_state)
+        results.hidden = true
+        form.appendChild(results)
+
+        // attach the form to the HTML document and trigger submission
+        document.body.appendChild(form)
+        form.submit()
+    }
+
+    function validateInputs() {
+        let validation_messages = []
+        const urlParams = new URLSearchParams(window.location.search)
+        const assign_id = urlParams.get('assignmentId')
+        if (assign_id === "ASSIGNMENT_ID_NOT_AVAILABLE") {
+            validation_messages.push("You must ACCEPT the HIT before you can submit the results.");
+        }
+        the_state.roleset.forEach((item, idx) => {
+            if (settings.enable_question_rating && item.adequacy < 0) {
+                let msg = "Please select level of adequacy for question number " + (idx + 1).toString() + ". ";
+                validation_messages.push(msg);
+            }
+            if (settings.enable_question_rating && item.fluency < 0) {
+                let msg = "Please select level of fluency for question number " + (idx + 1).toString() + ". ";
+                validation_messages.push(msg);
+            }
+            if (settings.enable_role_descriptions && item.descriptions.length === 0) {
+                let msg = "Please select one of the descriptions for question number " + (idx + 1).toString() + ". ";
+                validation_messages.push(msg);
+            }
+            if (settings.enable_answer_highlighting && item.answer_span === "-1:-1") {
+                let msg = "Please highlight an answer for question number " + (idx + 1).toString() +
+                    " or select that there is none. ";
+                validation_messages.push(msg);
+            }
+        });
+
+        return validation_messages;
+    }
+
+    function displayWarnings(validation_messages) {
+        let val_container = $id("validation_container");
+        if (validation_messages.length === 0) {
+            val_container.setAttribute("hidden", "1");
+            return;
+        }
+        val_container.removeAttribute("hidden");
+        while (val_container.firstElementChild) {
+            val_container.firstElementChild.remove();
+        }
+        validation_messages.forEach(m => {
+            let val_label = document.createElement("div")
+            val_label.innerText = m;
+            val_container.appendChild(val_label)
+        });
+        val_container.focus();
+        val_container.scrollIntoView();
+    }
+
+    function handleFormSubmit(event) {
+        let validation_messages = validateInputs();
+        displayWarnings(validation_messages)
+        if (validation_messages.length > 0) {
+            event.preventDefault();
+            return;
+        }
+        submit();
+    }
+
+    let DEBUG_DATA = {
+        // "text": "The pilots carry parachutes .\n" +
+        //     " Ejected landed in the desert south of Baghdad and then he was rescued by U.S.\n" +
+        //     " Army ground troops who were in the area .\n" +
+        //     " The pilot , whose name has not been released ,\n" +
+        //     " was brought back to this base .\n" +
+        //     " He is in good condition with the 172nd Fire Squadron which is based in Battle Creek ,\n" +
+        //     " Michigan , but he \\'s a very lucky man .",
+        "text" :"Also , the long journey of the marine who covered the statue of Saddam Hussein with an American flag , Bill Tucker will have a special report on the life of marine corporal Edward Chin , and actress Jane Fonda is now questioning freedom of the United States , and she has a few thoughts about ignorance .",
+        // "questions": "Who brought the pilot back?~!~Who was brought back?~!~Where is the pilot brought to?",
+        "questions": "What covered the statue of Saddam Hussein with an American flag ?~!~What does the Navy have with an American flag ?~!~Which sculpture did the Navy cover with an American flag ?~!~What covered the statue of Saddam Hussein with an American flag ?~!~Has the sea sunk the statue of Saddam Hussein ?",
+        "predicate_span": "9:10",
+        "roles": "B0~!~B1~!~B2~!~B3~!~B4",
+        // "roles": "A0~!~A1~!~A2",
+        "role_descriptions": "causer of covering~!~thing covered~!~covered with"
+    }
+    settings = {
+        "enable_answer_highlighting": true,
+        "enable_role_descriptions": true,
+        "enable_question_rating": true
+    }
+    let the_state = initialize_state()
+    populate_text();
+    populate_questions();
+    highlight_active_question();
+    window.onload = function () {
+        let submit = $id("submitButton")
+        if (!submit) {
+            submit = document.createElement("button")
+            submit.classList.add("btn", "btn-primary", "w-75", 'fs-5')
+            submit.innerText = "Submit"
+            $id("mturk_form").appendChild(submit);
+        }
+        submit.onclick = handleFormSubmit;
+    }
+    if (!settings.enable_answer_highlighting) {
+        document.querySelectorAll(".instr_qa").forEach(elt => elt.hidden = true);
+    }
+    if (!settings.enable_question_rating) {
+        document.querySelectorAll(".instr_rating").forEach(elt => elt.hidden = true);
+    }
+    if (!settings.enable_role_descriptions) {
+        document.querySelectorAll(".instr_role_desc").forEach(elt => elt.hidden = true);
+    }
+</script>
+</body>
+</html>

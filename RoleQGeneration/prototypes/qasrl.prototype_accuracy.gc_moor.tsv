@@ -1,0 +1,507 @@
+verb_form	sense_id	role_type	proto_question	support	squad_f1	proto_count_qasrl	proto_count_onto
+bid	01	A0	who bids something ?	40	0.5253842406527829	0.0	7.0
+bid	01	A0	who bids ?	40	0.5072485357779475	0.0	3.0
+bid	01	A0	who bids up something?	40	0.5060092406527829	0.0	3.0
+bid	01	A0	who bids for something?	40	0.5035092406527829	0.0	10.0
+bid	01	A0	who bids on something?	40	0.5035092406527829	0.0	4.0
+bid	01	A0	who bids to do something?	40	0.5011381350959356	1.0	0.0
+bid	01	A0	who bids somewhere?	40	0.473953081232493	1.0	0.0
+bid	01	A0	what bids something ?	40	0.46186218300029036	0.0	1.0
+bid	01	A0	what bids for something?	40	0.4603404438698556	0.0	2.0
+bid	01	A0	what bids ?	40	0.42833980561921736	1.0	0.0
+bid	01	A1	what does something bid ?	50	0.7182723943104707	0.0	3.0
+bid	01	A1	what does something bid for ?	50	0.7130696133259061	3.0	2.0
+bid	01	A1	what is bid for ?	50	0.6769980084523695	0.0	1.0
+bid	01	A1	what is bid ?	50	0.6614333670967065	0.0	7.0
+bid	01	A1	what is bid up ?	50	0.6582343825587128	0.0	1.0
+bid	01	A1	what does something bid on ?	50	0.648123576622298	0.0	1.0
+bid	01	A1	where does something bid ?	50	0.44128856437679986	0.0	1.0
+bid	01	A1	why is something bid ?	50	0.38522161498632085	0.0	1.0
+bid	01	A1	where does something bid something ?	50	0.3004207491854551	0.0	1.0
+bid	01	A1	who does something bid something?	50	0.29536943672082994	1.0	0.0
+bid	01	A2	how much does something bid somewhere?	12	0.7897292250233429	1.0	0.0
+bid	01	A2	how does something bid ?	12	0.7422799422799423	0.0	1.0
+bid	01	A2	what does something bid ?	12	0.3811965811965812	0.0	2.0
+bid	01	A2	who does something bid something?	12	0.08585858585858586	1.0	0.0
+bring	01	A0	who brings something to something?	50	0.5612554112554112	3.0	0.0
+bring	01	A0	what brings something somewhere?	50	0.5570776445776445	7.0	0.0
+bring	01	A0	who brings something somewhere?	50	0.5339427239427239	7.0	0.0
+bring	01	A0	what brings something ?	50	0.517061494061494	45.0	231.0
+bring	01	A0	what brings something something?	50	0.5148786657786658	0.0	5.0
+bring	01	A0	what brings in something?	50	0.5104221684748	0.0	7.0
+bring	01	A0	what brings something to something?	50	0.5010130066012419	5.0	0.0
+bring	01	A0	who brings something ?	50	0.49893162393162394	32.0	339.0
+bring	01	A0	who brings up something?	50	0.47430043812396755	0.0	20.0
+bring	01	A0	who brings in something?	50	0.4636974136974137	0.0	20.0
+bring	01	A0	what brings up something?	50	0.4536016206016205	0.0	11.0
+bring	01	A0	what brings something into something?	50	0.4496400940056112	2.0	0.0
+bring	01	A0	who brings about something?	50	0.4343140193140193	0.0	9.0
+bring	01	A0	who brings ?	50	0.3337873015873016	0.0	13.0
+bring	01	A0	how is something brought somewhere?	50	0.2956108336108336	2.0	0.0
+bring	01	A0	what brings ?	50	0.16496163836163838	2.0	10.0
+bring	01	A0	what is brought ?	50	0.07353868353868352	4.0	0.0
+bring	01	A1	what does something bring somewhere?	50	0.6509013209013209	9.0	0.0
+bring	01	A1	what does something bring ?	50	0.6450090954796837	64.0	252.0
+bring	01	A1	what is brought somewhere?	50	0.6333994110464699	15.0	0.0
+bring	01	A1	what is brought ?	50	0.6223667443667442	44.0	163.0
+bring	01	A1	what does something bring to something?	50	0.5924657891128479	5.0	0.0
+bring	01	A1	who does something bring ?	50	0.5774859911330499	0.0	91.0
+bring	01	A1	what does something bring up ?	50	0.5630781767252355	0.0	8.0
+bring	01	A1	what does something bring about ?	50	0.5536597846597846	0.0	4.0
+bring	01	A1	what is brought to something?	50	0.5409981201594105	4.0	0.0
+bring	01	A1	who is brought ?	50	0.5141846584787761	0.0	50.0
+bring	01	A1	who is brought somewhere?	50	0.44784702139965304	0.0	5.0
+bring	01	A1	what brings ?	50	0.44046065046065047	0.0	6.0
+bring	01	A1	what is brought about ?	50	0.4395116678432367	4.0	0.0
+bring	01	A1	who brings ?	50	0.32763463772000356	0.0	7.0
+bring	01	A1	what does something bring something to ?	50	0.2694490032167517	4.0	0.0
+bring	01	A1	what brings something ?	50	0.10862495036328708	4.0	4.0
+bring	01	A1	where does something bring something ?	50	0.09170634920634921	4.0	0.0
+bring	01	A2	where does something bring something ?	50	0.5306401147871737	18.0	27.0
+bring	01	A2	where does something bring ?	50	0.4909090354090355	2.0	7.0
+bring	01	A2	what is something brought to ?	50	0.4617221112221113	2.0	0.0
+bring	01	A2	what does something bring something to ?	50	0.45313503163503177	4.0	0.0
+bring	01	A2	who does something bring something to ?	50	0.4251081696081696	0.0	8.0
+bring	01	A2	where is something brought ?	50	0.40235634833003253	22.0	29.0
+bring	01	A2	when does something bring something ?	50	0.39091211853280816	0.0	2.0
+bring	01	A2	who does something bring something?	50	0.37964017269280426	0.0	26.0
+bring	01	A2	who does something bring ?	50	0.2550904542952598	0.0	5.0
+bring	01	A2	how does something bring ?	50	0.23391650506356393	0.0	2.0
+bring	01	A2	what is brought ?	50	0.16497512674388942	2.0	0.0
+bring	01	A2	what does something bring ?	50	0.15918587947999713	7.0	4.0
+bring	01	A2	who is brought ?	50	0.13713496307613954	0.0	6.0
+bring	01	A2	what brings something ?	50	0.12877853725222146	2.0	0.0
+bring	01	A2	what is brought to something?	50	0.09233964784859924	1.0	0.0
+bring	01	A2	what does something bring to something?	50	0.08697355912061795	1.0	0.0
+bring	01	A3	where does something bring ?	50	0.37859645909645906	0.0	9.0
+bring	01	A3	what is something brought to ?	50	0.37042757242757246	5.0	0.0
+bring	01	A3	what does something bring something to ?	50	0.34867631061748694	1.0	3.0
+bring	01	A3	how does something bring ?	50	0.333602097249156	0.0	18.0
+bring	01	A3	where does something bring something ?	50	0.2968401366075784	4.0	15.0
+bring	01	A3	what is something brought ?	50	0.29103663003663	0.0	1.0
+bring	01	A3	what does something bring ?	50	0.2756283487754076	16.0	6.0
+bring	01	A3	what does something bring something into ?	50	0.26394975939093585	2.0	0.0
+bring	01	A3	how is something brought ?	50	0.2522602339181287	2.0	29.0
+bring	01	A3	where is something brought ?	50	0.22837028399876697	9.0	13.0
+bring	01	A3	what is brought ?	50	0.2257517482517483	4.0	2.0
+bring	01	A3	how does something bring something ?	50	0.20191774891774894	2.0	26.0
+bring	01	A3	what brings ?	50	0.19370471685177573	1.0	0.0
+bring	01	A4	what is something brought from ?	20	0.6633003760944935	1.0	0.0
+bring	01	A4	where is something brought from ?	20	0.6633003760944935	1.0	0.0
+bring	01	A4	where does something bring something ?	20	0.5608003760944937	0.0	4.0
+bring	01	A4	where is something brought ?	20	0.5125860903802081	2.0	1.0
+bring	01	A4	who does something bring something from ?	20	0.5124670427611604	0.0	1.0
+bring	01	A4	how is something brought ?	20	0.5032374488256841	0.0	1.0
+bring	01	A4	what does something bring ?	20	0.36764696656001006	2.0	0.0
+bring	01	A4	what brings something ?	20	0.24300210367547828	1.0	0.0
+cost	01	A1	what costs something ?	50	0.4469520479520479	15.0	154.0
+cost	01	A1	what costs something something?	50	0.4447407663330584	2.0	2.0
+cost	01	A1	who costs something something?	50	0.43652980352980353	0.0	1.0
+cost	01	A1	who costs something ?	50	0.41089577089577084	0.0	3.0
+cost	01	A1	why is something cost ?	50	0.3210603873250932	0.0	1.0
+cost	01	A1	what costs of something?	50	0.3152198781610547	0.0	1.0
+cost	01	A1	what costs ?	50	0.2395716962775786	2.0	8.0
+cost	01	A1	why does something cost something ?	50	0.1938032687164468	0.0	1.0
+cost	01	A1	when does something cost something ?	50	0.17475223709898635	0.0	1.0
+cost	01	A1	what does something cost ?	50	0.013999999999999999	1.0	0.0
+cost	01	A2	how does something cost ?	50	0.7476931216931217	2.0	0.0
+cost	01	A2	what does something cost someone?	50	0.7410374440374441	1.0	3.0
+cost	01	A2	what does something cost ?	50	0.7293597883597885	5.0	55.0
+cost	01	A2	how much does something cost ?	50	0.7181395154553052	4.0	0.0
+cost	01	A2	what is cost ?	50	0.6714636270162586	0.0	3.0
+cost	01	A2	what is something cost ?	50	0.6421418951418952	0.0	1.0
+cost	01	A2	what costs to do something?	50	0.6077258852258853	0.0	2.0
+cost	01	A2	what costs ?	50	0.5740600434137587	0.0	2.0
+cost	01	A2	what costs something ?	50	0.04977142857142857	0.0	8.0
+cost	01	A3	who does something cost something?	50	0.4940676691729323	2.0	13.0
+cost	01	A3	who does something cost ?	50	0.4728496910726012	0.0	30.0
+cost	01	A3	who costs something to ?	50	0.4210245456298088	0.0	1.0
+cost	01	A3	who is cost something ?	50	0.3689793507146449	1.0	0.0
+cost	01	A3	who costs ?	50	0.3555814593043695	0.0	1.0
+cost	01	A3	who is cost ?	50	0.2716579237755708	0.0	9.0
+cost	01	A3	what does something cost ?	50	0.12370409982174686	0.0	8.0
+fund	01	A0	who funds something ?	50	0.6325624922902598	7.0	14.0
+fund	01	A0	what funds something ?	50	0.627711718011568	0.0	5.0
+fund	01	A0	who funds ?	50	0.6069994204578384	1.0	0.0
+fund	01	A0	where is something funded ?	50	0.5911534646707061	0.0	1.0
+fund	01	A0	what is something funded by ?	50	0.5635181370353785	2.0	0.0
+fund	01	A0	who is funded ?	50	0.5629994204578384	0.0	14.0
+fund	01	A0	how is something funded ?	50	0.48681434306434324	1.0	4.0
+fund	01	A0	what is funded ?	50	0.37274949826673975	5.0	5.0
+fund	01	A0	how does something fund something ?	50	0.07763492063492061	1.0	0.0
+fund	01	A1	what does something fund ?	50	0.543962370962371	7.0	8.0
+fund	01	A1	what is funded ?	50	0.5030667480667481	8.0	13.0
+fund	01	A1	what is funded by something?	50	0.4733260073260073	5.0	0.0
+fund	01	A1	where is something funded ?	50	0.04148148148148148	1.0	0.0
+fund	01	A2	what is something funded by ?	14	0.697737579880437	3.0	0.0
+fund	01	A2	what funds something ?	14	0.687533498247784	0.0	9.0
+give	01	A0	who gives something something?	50	0.46436696636696645	26.0	228.0
+give	01	A0	who gives something to someone?	50	0.44188644688644696	12.0	0.0
+give	01	A0	who gives something ?	50	0.3805228105228105	93.0	762.0
+give	01	A0	what gives something to something?	50	0.3698831168831168	14.0	0.0
+give	01	A0	what gives something ?	50	0.36527994227994237	81.0	259.0
+give	01	A0	what gives something up ?	50	0.35844222444222446	6.0	0.0
+give	01	A0	who gives to something?	50	0.34473060273060274	0.0	13.0
+give	01	A0	what gives something something?	50	0.34272438672438665	40.0	9.0
+give	01	A0	who gives up something?	50	0.31731646131646124	0.0	58.0
+give	01	A0	what gives up something?	50	0.31715773115773116	6.0	3.0
+give	01	A0	who gives ?	50	0.31623568943134156	6.0	10.0
+give	01	A0	what gives off something?	50	0.3006028211554527	36.0	0.0
+give	01	A0	who gives up ?	50	0.2502055722055722	0.0	13.0
+give	01	A0	how is something given ?	50	0.1866998556998557	0.0	3.0
+give	01	A1	what does something give to someone?	50	0.7237938205585265	16.0	0.0
+give	01	A1	what is given to something?	50	0.7134329004329005	0.0	13.0
+give	01	A1	what does something give ?	50	0.7066221033868092	146.0	404.0
+give	01	A1	what is given ?	50	0.7058124098124097	168.0	124.0
+give	01	A1	what does something give off ?	50	0.6929841616931401	36.0	0.0
+give	01	A1	what is given to someone?	50	0.6757858416093709	11.0	17.0
+give	01	A1	what does something give someone?	50	0.6590656565656566	41.0	90.0
+give	01	A1	what is something given ?	50	0.6405073815073814	63.0	27.0
+give	01	A1	what does something give to something?	50	0.6270868686868687	14.0	0.0
+give	01	A1	what does something give something?	50	0.6190831390831391	13.0	0.0
+give	01	A1	what gives ?	50	0.5924729649435532	0.0	15.0
+give	01	A1	who does something give ?	50	0.49042627099148833	0.0	19.0
+give	01	A1	what does something give up ?	50	0.4602081252081252	15.0	28.0
+give	01	A1	what gives something ?	50	0.09410351966873706	0.0	4.0
+give	01	A2	who does something give something?	50	0.5566950067476383	18.0	570.0
+give	01	A2	who is something given to ?	50	0.5284727845254161	16.0	29.0
+give	01	A2	who does something give something to ?	50	0.5228527379053695	37.0	41.0
+give	01	A2	what does something give something to ?	50	0.43628785834048983	17.0	0.0
+give	01	A2	who is given something ?	50	0.4299001349527666	57.0	154.0
+give	01	A2	what is something given to ?	50	0.40521289821289824	10.0	0.0
+give	01	A2	what is given something ?	50	0.39500503005766163	32.0	13.0
+give	01	A2	who does something give ?	50	0.3908060044530633	0.0	17.0
+give	01	A2	who is given ?	50	0.33393029193029194	0.0	47.0
+give	01	A2	what does something give something?	50	0.15495776772247363	0.0	29.0
+give	01	A2	what does something give ?	50	0.12262820512820514	35.0	17.0
+give	01	A2	what is given ?	50	0.10313053613053613	10.0	10.0
+give	01	A2	what does something give someone?	50	0.1011025641025641	3.0	0.0
+invest	01	A0	who invests something ?	50	0.6790087575259989	2.0	71.0
+invest	01	A0	who invests ?	50	0.6705146960319374	7.0	60.0
+invest	01	A0	who invests in something?	50	0.667997557997558	2.0	33.0
+invest	01	A0	who invests somewhere?	50	0.6354634583806997	0.0	12.0
+invest	01	A0	what invests something ?	50	0.6238793313965728	0.0	10.0
+invest	01	A0	what invests in something?	50	0.5857059492231906	1.0	7.0
+invest	01	A0	who is invested ?	50	0.4524115492350787	0.0	8.0
+invest	01	A0	what invests ?	50	0.3663689643689644	1.0	5.0
+invest	01	A0	where is something invested ?	50	0.17033426573426574	0.0	2.0
+invest	01	A0	what is invested ?	50	0.1146819650937298	1.0	7.0
+invest	01	A0	what does something invest in ?	50	0.031135135135135137	1.0	0.0
+invest	01	A1	what is invested in something?	50	0.6989884559884562	0.0	1.0
+invest	01	A1	what is invested to something?	50	0.6316727716727718	0.0	1.0
+invest	01	A1	what is invested ?	50	0.6094646464646466	3.0	45.0
+invest	01	A1	what does something invest ?	50	0.5967540955776252	2.0	46.0
+invest	01	A1	what invests ?	50	0.43359085359085364	0.0	2.0
+invest	01	A1	how does something invest ?	50	0.23892259244023947	0.0	3.0
+invest	01	A1	what does something invest in ?	50	0.22460606060606061	0.0	3.0
+invest	01	A1	who invests in something?	50	0.17992429792429795	0.0	1.0
+invest	01	A1	who invests ?	50	0.17166861729056854	0.0	1.0
+invest	01	A1	how is something invested ?	50	0.08100785075142322	0.0	1.0
+invest	01	A2	what is invested in ?	50	0.6009402406119445	1.0	0.0
+invest	01	A2	what does something invest in ?	50	0.5746795013512053	2.0	3.0
+invest	01	A2	what does something invest ?	50	0.5014267540984579	1.0	1.0
+invest	01	A2	where does something invest ?	50	0.49641725482580074	0.0	9.0
+invest	01	A2	what is something invested in ?	50	0.4660387444472903	2.0	0.0
+invest	01	A2	how does something invest ?	50	0.38096161240409643	0.0	3.0
+invest	01	A2	what is invested ?	50	0.38033809215840264	0.0	2.0
+invest	01	A2	where is something invested ?	50	0.37162071802926383	2.0	9.0
+invest	01	A2	where does something invest something ?	50	0.3697815034803718	0.0	11.0
+invest	01	A2	how does something invest something ?	50	0.3474987926732959	1.0	1.0
+invest	01	A2	what invests ?	50	0.3326382881261178	0.0	1.0
+invest	01	A2	why does something invest ?	50	0.31651622068163826	1.0	0.0
+invest	01	A2	how is something invested ?	50	0.22870551662035032	0.0	3.0
+leave	01	A0	who leaves something ?	50	0.6108609168609169	40.0	210.0
+leave	01	A0	what leaves something ?	50	0.6059598897834192	39.0	117.0
+leave	01	A0	what leaves something behind ?	50	0.6000062160062162	3.0	0.0
+leave	01	A0	what leaves behind something?	50	0.5712626262626264	2.0	0.0
+leave	01	A0	who leaves ?	50	0.562439700650227	36.0	134.0
+leave	01	A0	what leaves somewhere?	50	0.560588483412013	6.0	8.0
+leave	01	A0	who leaves up something?	50	0.5564337884337884	0.0	3.0
+leave	01	A0	who leaves somewhere?	50	0.5223053613053612	23.0	158.0
+leave	01	A0	what leaves ?	50	0.5043861693861694	13.0	9.0
+leave	01	A0	what leaves something something?	50	0.48234199134199135	0.0	4.0
+leave	01	A0	who is left ?	50	0.3833481420540244	0.0	3.0
+leave	01	A0	what is left ?	50	0.3302481962481963	0.0	8.0
+leave	01	A0	what is something left by ?	50	0.2868137768664084	2.0	0.0
+leave	01	A0	what does something leave ?	50	0.045324675324675316	2.0	0.0
+leave	01	A1	what does something leave ?	50	0.7341565656565656	78.0	137.0
+leave	01	A1	what does something leave behind ?	50	0.6883833961737187	4.0	0.0
+leave	01	A1	where does something leave ?	50	0.6763787878787879	48.0	51.0
+leave	01	A1	who does something leave ?	50	0.6626374088277315	4.0	53.0
+leave	01	A1	what is left ?	50	0.46926040805073055	79.0	75.0
+leave	01	A1	what is left behind ?	50	0.431005772005772	7.0	0.0
+leave	01	A1	who is left ?	50	0.39903535353535347	6.0	54.0
+leave	01	A1	what is left to someone?	50	0.3891158841158841	0.0	3.0
+leave	01	A1	what is left out ?	50	0.30538468720821665	3.0	0.0
+leave	01	A1	what is left to something?	50	0.27908381553087436	0.0	2.0
+leave	01	A1	what is left in something?	50	0.2557332112332112	8.0	0.0
+leave	01	A1	who leaves ?	50	0.23443775190326913	0.0	3.0
+leave	01	A1	how is something left ?	50	0.2166447245564893	0.0	2.0
+leave	01	A1	what is left somewhere?	50	0.2129920634920635	11.0	0.0
+leave	01	A1	how does something leave something ?	50	0.17146725496725496	0.0	2.0
+leave	01	A2	how does something leave ?	50	0.6532746402826374	1.0	0.0
+leave	01	A2	how is something left ?	50	0.6245218400317285	11.0	9.0
+leave	01	A2	what is something left ?	50	0.5993050979521568	4.0	0.0
+leave	01	A2	where does something leave ?	50	0.5918611862047317	2.0	0.0
+leave	01	A2	what does something leave for ?	50	0.5764889079524409	0.0	10.0
+leave	01	A2	where does something leave something ?	50	0.5507712791461057	2.0	8.0
+leave	01	A2	how does something leave something ?	50	0.5499450947603122	4.0	8.0
+leave	01	A2	where is something left ?	50	0.5472303753953682	11.0	5.0
+leave	01	A2	how does something leave somewhere?	50	0.5444713718417714	1.0	0.0
+leave	01	A2	where does something leave for ?	50	0.5124000655643657	3.0	0.0
+leave	01	A2	what does something leave ?	50	0.4828998253750499	0.0	11.0
+leave	01	A2	who does something leave ?	50	0.37120649158325203	0.0	5.0
+leave	01	A2	what is left ?	50	0.3436147705605833	3.0	0.0
+leave	01	A2	who does something leave something?	50	0.2937561196972961	0.0	2.0
+leave	01	A2	who is left ?	50	0.22151797884655028	0.0	7.0
+leave	01	A2	who is left with something?	50	0.08238669043374927	0.0	3.0
+loan	01	A0	who loans something ?	4	0.5166666666666666	1.0	3.0
+loan	01	A0	who loans something something?	4	0.5166666666666666	1.0	0.0
+loan	01	A0	what loans up something?	4	0.39166666666666666	0.0	1.0
+loan	01	A1	what does something loan ?	3	0.7407407407407408	0.0	1.0
+loan	01	A1	what does something loan up ?	3	0.6666666666666666	0.0	1.0
+loan	01	A1	what is loaned ?	3	0.6666666666666666	1.0	0.0
+loan	01	A2	what does something loan ?	3	0.3757575757575758	0.0	1.0
+lose	02	A0	who loses something ?	50	0.5652929292929294	67.0	284.0
+lose	02	A0	what loses something ?	50	0.5463838383838384	50.0	61.0
+lose	02	A0	who loses to something?	50	0.5433333333333333	0.0	2.0
+lose	02	A0	what loses something to do something?	50	0.5043232323232323	1.0	0.0
+lose	02	A0	who loses somewhere?	50	0.4982121212121212	0.0	2.0
+lose	02	A0	who loses in something?	50	0.4660418353576248	0.0	3.0
+lose	02	A0	who is lost something ?	50	0.45710774410774413	0.0	4.0
+lose	02	A0	what loses to something?	50	0.4313059163059163	1.0	0.0
+lose	02	A0	who loses ?	50	0.4202298052824369	20.0	20.0
+lose	02	A0	who loses to someone?	50	0.29832423490488	8.0	0.0
+lose	02	A0	who is lost ?	50	0.2274553224553225	2.0	0.0
+lose	02	A0	what is lost to something?	50	0.22284848484848485	0.0	1.0
+lose	02	A0	what loses ?	50	0.17822544122544123	2.0	2.0
+lose	02	A0	how is something lost ?	50	0.147981684981685	2.0	0.0
+lose	02	A0	what is lost ?	50	0.07373737373737374	0.0	1.0
+lose	02	A0	what does something lose ?	50	0.013333333333333332	1.0	0.0
+lose	02	A1	what is lost ?	50	0.71287019585162	86.0	34.0
+lose	02	A1	what does something lose ?	50	0.671367175995659	101.0	122.0
+lose	02	A1	how much does something lose ?	50	0.6542326373317087	1.0	0.0
+lose	02	A1	what loses ?	50	0.6507031691928717	0.0	1.0
+lose	02	A1	how much does something lose to someone?	50	0.6092652452466694	1.0	0.0
+lose	02	A1	what is lost in something?	50	0.6067235155625249	0.0	1.0
+lose	02	A1	what does something lose in something?	50	0.5955065594879836	1.0	0.0
+lose	02	A1	who is lost ?	50	0.5820072768648621	8.0	17.0
+lose	02	A1	what loses to someone?	50	0.5807114656928899	0.0	1.0
+lose	02	A1	what does something lose somewhere?	50	0.5683269939554769	1.0	0.0
+lose	02	A1	what does something lose to ?	50	0.5153100478535412	0.0	1.0
+lose	02	A1	who loses ?	50	0.3648808559861191	2.0	0.0
+lose	02	A1	where is something lost ?	50	0.11118627450980392	2.0	0.0
+lose	02	A1	who loses something ?	50	0.05920050125313283	2.0	4.0
+lose	02	A1	what loses something ?	50	0.03710526315789474	0.0	9.0
+lose	02	A2	what does something lose something to ?	19	0.6517578912315755	1.0	1.0
+lose	02	A2	what does something lose to ?	19	0.6359684175473649	2.0	1.0
+lose	02	A2	what is something lost to ?	19	0.6183410157094368	5.0	0.0
+lose	02	A2	what is something lost into ?	19	0.5589617984354828	1.0	0.0
+lose	02	A2	who does something lose to ?	19	0.5481655771129456	18.0	0.0
+lose	02	A2	how does something lose something ?	19	0.5187362345257082	1.0	1.0
+lose	02	A2	who does something lose something to ?	19	0.5060603139550508	3.0	1.0
+lose	02	A2	how is something lost ?	19	0.48874458874458865	1.0	0.0
+lose	02	A2	where does something lose ?	19	0.4574960127591707	0.0	1.0
+lose	02	A2	where does something lose something ?	19	0.45383877582519344	0.0	1.0
+lose	02	A2	where is something lost ?	19	0.42052822672517065	2.0	0.0
+lose	02	A2	what does something lose ?	19	0.20010319917440658	1.0	7.0
+lose	02	A2	who is lost ?	19	0.16189637974534998	0.0	1.0
+pay	01	A0	who pays something ?	50	0.6006904761904761	28.0	352.0
+pay	01	A0	who pays something to someone?	50	0.5809920255183411	4.0	0.0
+pay	01	A0	what pays something ?	50	0.5593809523809522	1.0	56.0
+pay	01	A0	who pays something something?	50	0.5365793650793651	0.0	8.0
+pay	01	A0	who pays off something?	50	0.5198939014202171	2.0	0.0
+pay	01	A0	who pays up something?	50	0.5147142857142857	0.0	15.0
+pay	01	A0	who pays for something?	50	0.5069483709273183	8.0	59.0
+pay	01	A0	who pays to do something?	50	0.4984920634920633	0.0	4.0
+pay	01	A0	who pays ?	50	0.4844714817346395	6.0	23.0
+pay	01	A0	who pays something to do something?	50	0.4737142857142856	1.0	0.0
+pay	01	A0	what pays for something?	50	0.45154201680672257	1.0	9.0
+pay	01	A0	what pays something to someone?	50	0.39591091588150407	1.0	0.0
+pay	01	A0	what pays ?	50	0.35179997066857316	0.0	7.0
+pay	01	A0	how is something paid for ?	50	0.21214331681390508	1.0	0.0
+pay	01	A0	how is something paid ?	50	0.19214769805358042	0.0	13.0
+pay	01	A1	what does something pay ?	50	0.650015578161089	18.0	200.0
+pay	01	A1	how does something pay ?	50	0.648667385658717	0.0	3.0
+pay	01	A1	what does something pay someone?	50	0.6350448179271709	0.0	5.0
+pay	01	A1	what is paid to someone?	50	0.6302967032967034	6.0	0.0
+pay	01	A1	how much does something pay ?	50	0.6198095238095239	2.0	0.0
+pay	01	A1	what is paid ?	50	0.6028095238095239	15.0	100.0
+pay	01	A1	what does something pay off ?	50	0.5623076923076923	2.0	0.0
+pay	01	A1	what does something pay up ?	50	0.548	0.0	5.0
+pay	01	A1	what pays ?	50	0.5229992872624452	0.0	6.0
+pay	01	A1	what is something paid ?	50	0.4899234360410831	0.0	4.0
+pay	01	A1	how much does something pay for something?	50	0.4846526806526807	1.0	0.0
+pay	01	A1	what pays off ?	50	0.46117429938482585	2.0	0.0
+pay	01	A1	what pays up ?	50	0.44479609279609283	0.0	4.0
+pay	01	A1	what does something pay for ?	50	0.43351073762838477	0.0	5.0
+pay	01	A1	what is paid for ?	50	0.42812583889390987	0.0	5.0
+pay	01	A1	how does something pay for something?	50	0.35684498593194247	1.0	0.0
+pay	01	A1	how is something paid ?	50	0.2534458394389744	1.0	0.0
+pay	01	A1	how is something paid for ?	50	0.19685800456853086	1.0	0.0
+pay	01	A2	who does something pay ?	50	0.6563411555764498	3.0	23.0
+pay	01	A2	who does something pay something to ?	50	0.6291369011105854	6.0	3.0
+pay	01	A2	what does something pay something to ?	50	0.6282198357198358	1.0	0.0
+pay	01	A2	who is paid something ?	50	0.5009337402998731	1.0	0.0
+pay	01	A2	who does something pay something?	50	0.49779415029415025	0.0	16.0
+pay	01	A2	who is paid ?	50	0.49146017272672615	8.0	35.0
+pay	01	A2	who pays ?	50	0.4078945089997722	1.0	0.0
+pay	01	A2	where does something pay something ?	50	0.39180930180930185	0.0	8.0
+pay	01	A2	who is something paid to ?	50	0.367763084868348	3.0	3.0
+pay	01	A2	what does something pay ?	50	0.3622382646593173	3.0	6.0
+pay	01	A2	what is paid ?	50	0.33770796162901434	4.0	3.0
+pay	01	A2	where is something paid ?	50	0.31777077162603484	0.0	7.0
+pay	01	A2	how is something paid ?	50	0.2695302716607065	0.0	2.0
+pay	01	A3	what does something pay for ?	50	0.5182428349857531	4.0	10.0
+pay	01	A3	how does something pay something ?	50	0.45369693855448345	0.0	1.0
+pay	01	A3	what is paid for ?	50	0.4520281133991779	1.0	2.0
+pay	01	A3	what does something pay to do?	50	0.44219560258971213	0.0	1.0
+pay	01	A3	how does something pay ?	50	0.43413160354848346	0.0	1.0
+pay	01	A3	what does something pay out of ?	50	0.4226163962071404	1.0	0.0
+pay	01	A3	why is something paid ?	50	0.3931814972467147	2.0	0.0
+pay	01	A3	what is paid ?	50	0.3907596515025695	1.0	5.0
+pay	01	A3	what does something pay ?	50	0.381801711781472	0.0	3.0
+pay	01	A3	why does something pay something ?	50	0.38131681390504923	4.0	12.0
+pay	01	A3	what does something pay someone?	50	0.37535360433336445	0.0	1.0
+pay	01	A3	what is something paid for ?	50	0.31914180095315997	2.0	0.0
+pay	01	A3	how is something paid ?	50	0.3175353535353536	0.0	3.0
+pay	01	A3	why does something pay for something?	50	0.22186118277119982	1.0	0.0
+plan	01	A0	who plans on doing something?	50	0.589	1.0	0.0
+plan	01	A0	who plans for something?	50	0.5873333333333334	2.0	9.0
+plan	01	A0	who plans on something?	50	0.5873333333333334	0.0	2.0
+plan	01	A0	who plans something ?	50	0.5832380952380952	25.0	55.0
+plan	01	A0	who plans something?	50	0.5832380952380952	0.0	3.0
+plan	01	A0	who plans up something?	50	0.573047619047619	0.0	2.0
+plan	01	A0	what plans to do something?	50	0.5669333333333333	0.0	35.0
+plan	01	A0	who plans ?	50	0.5656666666666667	3.0	8.0
+plan	01	A0	who plans to do something?	50	0.5613333333333334	9.0	199.0
+plan	01	A0	what plans something ?	50	0.548695238095238	1.0	2.0
+plan	01	A0	where is something planned ?	50	0.27808866995073894	1.0	0.0
+plan	01	A0	what is planned ?	50	0.078988455988456	1.0	2.0
+plan	01	A1	what does something plan ?	50	0.7793542479560652	18.0	32.0
+plan	01	A1	what is planned ?	50	0.7132473025392306	28.0	19.0
+plan	01	A1	what does something plan for ?	50	0.7043948002379993	3.0	4.0
+plan	01	A1	what is planned by someone?	50	0.6933393941825934	1.0	0.0
+plan	01	A1	what is planned for ?	50	0.6534528813667826	2.0	0.0
+plan	01	A1	what does something plan to do?	50	0.6451790695252672	6.0	2.0
+plan	01	A1	what is planned somewhere?	50	0.6331217509172379	1.0	0.0
+plan	01	A1	what does something plan on doing?	50	0.609451186912474	1.0	0.0
+plan	01	A1	what is something planned for ?	50	0.33561976585925085	1.0	0.0
+plan	01	A1	when does something plan something ?	50	0.19060830586681982	1.0	0.0
+plan	01	A2	how is something planned for ?	2	0.3125	1.0	0.0
+price	01	A0	what prices something ?	15	0.7705331705331706	0.0	2.0
+price	01	A0	who prices something ?	15	0.753866503866504	0.0	9.0
+price	01	A0	how is something priced ?	15	0.14603174603174604	0.0	3.0
+price	01	A1	what is priced something ?	50	0.5989980607627665	4.0	0.0
+price	01	A1	who is priced ?	50	0.4262444300797241	0.0	1.0
+price	01	A1	what is priced ?	50	0.3399135124135125	1.0	78.0
+price	01	A1	what does something price ?	50	0.26798862248862254	0.0	4.0
+price	01	A1	what prices ?	50	0.22374492174492175	0.0	1.0
+price	01	A2	how is something priced ?	50	0.6853008757526001	0.0	8.0
+price	01	A2	how does something price something ?	50	0.5668033671134357	0.0	2.0
+price	01	A2	what is something priced ?	50	0.5333416028416029	1.0	0.0
+price	01	A2	when is something priced ?	50	0.34796778711484605	0.0	15.0
+put	01	A0	who puts something somewhere?	50	0.5628636725593246	22.0	0.0
+put	01	A0	who puts something in something?	50	0.5377245502437318	4.0	0.0
+put	01	A0	who puts something ?	50	0.5199088496045017	26.0	461.0
+put	01	A0	who puts something?	50	0.5199088496045017	0.0	6.0
+put	01	A0	who puts something on something?	50	0.5055000361956883	5.0	0.0
+put	01	A0	who puts something into something?	50	0.5026746393702914	6.0	0.0
+put	01	A0	who puts up something?	50	0.4825133089133089	0.0	57.0
+put	01	A0	what puts something somewhere?	50	0.48041550846813996	11.0	0.0
+put	01	A0	who puts in something?	50	0.46992124542124536	0.0	16.0
+put	01	A0	what puts up something?	50	0.4662676930912225	0.0	6.0
+put	01	A0	who puts on something?	50	0.44940842490842486	0.0	9.0
+put	01	A0	who puts something in ?	50	0.43497924297924295	3.0	0.0
+put	01	A0	what puts something ?	50	0.406028305028305	7.0	104.0
+put	01	A0	who puts up ?	50	0.36503007178007174	0.0	4.0
+put	01	A0	who puts ?	50	0.3430592074592074	3.0	15.0
+put	01	A0	how is something put ?	50	0.1313365114417746	0.0	3.0
+put	01	A0	what is put ?	50	0.02016017316017316	3.0	0.0
+put	01	A1	what does something put somewhere?	50	0.5103243732531658	22.0	0.0
+put	01	A1	what is put on something?	50	0.48303722881865285	6.0	5.0
+put	01	A1	what does something put into something?	50	0.47575120957473876	3.0	0.0
+put	01	A1	what is put somewhere?	50	0.4351624649859944	28.0	0.0
+put	01	A1	what is put in something?	50	0.4162735760971054	5.0	0.0
+put	01	A1	what does something put ?	50	0.39027957010309955	24.0	320.0
+put	01	A1	what is put into something?	50	0.389564910493703	9.0	13.0
+put	01	A1	what is put ?	50	0.3814512113273723	25.0	225.0
+put	01	A1	who does something put ?	50	0.3646783380018674	0.0	70.0
+put	01	A1	who is put somewhere?	50	0.3252418300653595	6.0	0.0
+put	01	A1	what puts ?	50	0.31332265099881196	0.0	17.0
+put	01	A1	what does something put up ?	50	0.31044884527237465	0.0	17.0
+put	01	A1	what is put on ?	50	0.3096293606634164	5.0	0.0
+put	01	A1	what does something put in ?	50	0.30117604617604615	0.0	5.0
+put	01	A1	how does something put up ?	50	0.2934790764790765	0.0	3.0
+put	01	A1	who is put ?	50	0.2641227824463119	0.0	57.0
+put	01	A2	where is something put ?	50	0.6617806637806639	46.0	59.0
+put	01	A2	where does something put something ?	50	0.6487629858064641	29.0	69.0
+put	01	A2	how is something put ?	50	0.5770220841959972	5.0	26.0
+put	01	A2	what is something put on ?	50	0.554677880471931	7.0	0.0
+put	01	A2	how does something put something ?	50	0.5541413894431796	3.0	24.0
+put	01	A2	what is something put into ?	50	0.5143519373493799	6.0	0.0
+put	01	A2	where does something put ?	50	0.4727228327228328	0.0	7.0
+put	01	A2	how does something put ?	50	0.4482690817953976	0.0	12.0
+put	01	A2	what is something put under ?	50	0.4430010544807032	4.0	0.0
+put	01	A2	where does something put something somewhere?	50	0.4160963191397974	4.0	0.0
+put	01	A2	what does something put ?	50	0.3955103668261563	4.0	14.0
+put	01	A2	what does something put something into ?	50	0.38181443001443	5.0	0.0
+put	01	A2	why does something put something ?	50	0.3416116118592225	0.0	2.0
+put	01	A2	how is something put somewhere?	50	0.3340705438352497	0.0	4.0
+put	01	A2	what is put ?	50	0.29365248333034183	0.0	2.0
+sell	01	A0	who sells something ?	50	0.5054761904761905	19.0	426.0
+sell	01	A0	who sells off something?	50	0.47880952380952385	1.0	0.0
+sell	01	A0	who sells something to someone?	50	0.464017316017316	1.0	0.0
+sell	01	A0	what sells something ?	50	0.461150829846482	1.0	72.0
+sell	01	A0	who sells up something?	50	0.45550793650793653	0.0	14.0
+sell	01	A0	who sells for something?	50	0.4525555555555556	0.0	4.0
+sell	01	A0	what sells up something?	50	0.4333650793650793	0.0	4.0
+sell	01	A0	who sells ?	50	0.41555555555555557	1.0	29.0
+sell	01	A0	where is something sold ?	50	0.20976843446408666	1.0	0.0
+sell	01	A0	how is something sold ?	50	0.16637954557519777	1.0	12.0
+sell	01	A0	what sells ?	50	0.1071111111111111	1.0	5.0
+sell	01	A0	who is sold ?	50	0.07374854613985049	0.0	2.0
+sell	01	A0	where does something sell something ?	50	0.07077372546937764	1.0	0.0
+sell	01	A0	what is sold ?	50	0.018333333333333333	0.0	3.0
+sell	01	A1	what is sold ?	50	0.6979843685726038	22.0	254.0
+sell	01	A1	what sells ?	50	0.653368518298217	3.0	25.0
+sell	01	A1	what does something sell ?	50	0.644130888719124	19.0	215.0
+sell	01	A1	what does something sell to someone?	50	0.6288461734344087	1.0	0.0
+sell	01	A1	what is sold in something?	50	0.6245291571173925	1.0	0.0
+sell	01	A1	what is sold off ?	50	0.6146712372594727	1.0	0.0
+sell	01	A1	what sells somewhere?	50	0.5864784884877764	0.0	3.0
+sell	01	A1	what does something sell off ?	50	0.5706510352392705	1.0	0.0
+sell	01	A1	what is sold for something?	50	0.5682467271290801	0.0	2.0
+sell	01	A1	what is sold as something?	50	0.5655424242424242	1.0	0.0
+sell	01	A1	what is sold to something?	50	0.5386368272250625	0.0	3.0
+sell	01	A1	what does something sell up ?	50	0.48980153180153174	0.0	5.0
+sell	01	A1	who does something sell ?	50	0.4190244688232304	0.0	3.0
+sell	01	A1	what sells for something?	50	0.38498845598845605	0.0	9.0
+sell	01	A1	how much does something sell ?	50	0.36612894913823707	2.0	0.0
+sell	01	A1	who sells ?	50	0.21337677582434617	0.0	5.0
+sell	01	A1	where is something sold ?	50	0.09183697145766112	1.0	0.0
+sell	01	A2	who does something sell something ?	50	0.7128025308025308	0.0	1.0
+sell	01	A2	who does something sell something?	50	0.7128025308025308	0.0	1.0
+sell	01	A2	what is something sold to ?	50	0.6978474858474858	1.0	0.0
+sell	01	A2	who is something sold to ?	50	0.6857635697635699	0.0	6.0
+sell	01	A2	who does something sell something to ?	50	0.6691587497469853	1.0	15.0
+sell	01	A2	who does something sell something on ?	50	0.6198571624453979	0.0	1.0
+sell	01	A2	where is something sold ?	50	0.6016689780807429	0.0	7.0
+sell	01	A2	where does something sell something ?	50	0.5727928737928739	0.0	4.0
+sell	01	A2	where does something sell ?	50	0.5130069375069377	0.0	1.0
+sell	01	A2	who is sold ?	50	0.24805971153029976	0.0	4.0
+sell	01	A2	what does something sell ?	50	0.10045021645021646	1.0	3.0
+sell	01	A3	what does something sell for ?	50	0.6430778669155953	0.0	1.0
+sell	01	A3	how much does something sell something ?	50	0.6266929315894836	1.0	0.0
+sell	01	A3	how much does something sell for ?	50	0.6245024553990074	1.0	0.0
+sell	01	A3	how much does something sell ?	50	0.6122730181695701	0.0	1.0
+sell	01	A3	how is something sold ?	50	0.609826147536674	1.0	17.0
+sell	01	A3	how much is something sold ?	50	0.6029873038838559	1.0	0.0
+sell	01	A3	how much does something sell something for ?	50	0.6019468998434518	1.0	0.0
+sell	01	A3	how much is something sold for ?	50	0.5998883338883342	1.0	0.0
+sell	01	A3	how does something sell something ?	50	0.5681892458454326	0.0	3.0
+sell	01	A3	why is something sold ?	50	0.48995111784766976	0.0	10.0
+sell	01	A3	why does something sell something ?	50	0.43931255717462625	0.0	5.0
+sell	01	A3	where does something sell something ?	50	0.34841798201798196	0.0	1.0
+sell	01	A3	what does something sell ?	50	0.3051172850138367	0.0	1.0
+sell	01	A3	what is sold ?	50	0.1228064898064898	1.0	3.0
