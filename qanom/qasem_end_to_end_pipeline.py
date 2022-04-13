@@ -6,11 +6,22 @@ from nominalization_detector import NominalizationDetector
 from qasrl_seq2seq_pipeline import QASRL_Pipeline
 import spacy
 
+
+import csv
+import re
+from collections import defaultdict
+from candidate_extraction.candidate_extraction import get_verb_forms_from_lexical_resources
+from RoleQGeneration.srl_as_qa_parser import PropBankRoleFinder
+from RoleQGeneration.question_translation import QuestionTranslator
+from argparse import ArgumentParser
+
 qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
                 "joint": "kleinay/qanom-seq2seq-model-joint"}  
 
 default_detection_threshold = 0.7
 default_model = "joint"
+transformation_model_path = "/home/nlp/wolhanr/QASem/RoleQGeneration/question_transformation_grammar_corrected_who"
+device_number = 0
 
 
 class QASemEndToEndPipeline():
@@ -26,6 +37,7 @@ class QASemEndToEndPipeline():
         qanom_model = qanom_model or default_model
         model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
         self.qa_pipeline = QASRL_Pipeline(model_url)
+        self.q_translator = QuestionTranslator.from_pretrained(transformation_model_path, device_id=int(device_number))
 
     def __call__(self, sentences: Iterable[str], 
                  detection_threshold = None,
@@ -74,14 +86,31 @@ class QASemEndToEndPipeline():
         for sentence, predicate_infos in zip(sentences, predicate_lists):
             # collect QAs for all predicates in sentence 
             predicates_full_infos = []
+            context_samples = []
             for pred_info in predicate_infos:
+                questions = {}
                 model_input = self._prepare_input_sentence(sentence, pred_info['predicate_idx'])
                 model_output = self.qa_pipeline(model_input, 
                                                 verb_form=pred_info['verb_form'], 
                                                 predicate_type="verbal",
                                                 **generate_kwargs)[0]
+                
+                # for contextualization 
+                for qa in model_output['QAs']:
+                    context_samples.append({'proto_question': qa['question'], 'predicate_lemma': pred_info['verb_form'],
+                        'predicate_span': str(pred_info['predicate_idx'])+':'+str(pred_info['predicate_idx']+1),
+                        'text': sentence})
+
+
+                contextualized_questions = self.q_translator.predict(context_samples)
+                for qa, context_question in zip(model_output['QAs'], contextualized_questions):
+                    qa['contextual_question'] = context_question
+                
                 predicates_full_info = dict(QAs=model_output['QAs'], **pred_info)
                 predicates_full_infos.append(predicates_full_info)
+
+        
+
             outputs_qasrl.append(predicates_full_infos)
         
         for i, output_nom in enumerate(outputs):
@@ -102,8 +131,11 @@ if __name__ == "__main__":
     # print(pipe([sentence])) 
     #res1 = pipe(["The student was interested in Luke 's research about see animals ."])#, verb_form="research", predicate_type="nominal")
     res2 = pipe(["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals .", "I eat a peach"])#, verb_form="treat", predicate_type="nominal", num_beams=10)
-    #res3 = pipe(["A number of professions have developed that specialize in the treatment of mental disorders ."])
-    # print(res1)
+    # #res3 = pipe(["A number of professions have developed that specialize in the treatment of mental disorders ."])
+    # # print(res1)
     print(res2)
+
+    # res3 = pipe(['Tom brings the dog to the park.']) 
+    # print(res3)
     # print(res3)   
 
