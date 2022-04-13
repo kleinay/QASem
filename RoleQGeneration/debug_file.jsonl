@@ -1,0 +1,4 @@
+{"id": 0, "sentence": "Tom brings the dog to the park.", "target_idx": 1, "target_lemma": "bring", "target_pos": "v", "predicate_sense": 1}
+{"id": 1,"sentence": "Jane bought the book from Tom for 5 dollars.", "target_idx": 1, "target_lemma": "buy", "target_pos": "v", "predicate_sense": 1}
+{"id": 2,"sentence": "We will fly to the Carribean.", "target_idx": 2, "target_lemma": "fly", "target_pos": "v", "predicate_sense": 1}
+{"id": 3, "sentence": "The pasta was eaten by the guests.", "target_idx": 3, "target_lemma": "eat", "target_pos": "v", "predicate_sense": 1}
