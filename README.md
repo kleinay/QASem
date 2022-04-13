@@ -160,6 +160,59 @@ In addition, you can specify additional kwargs for controling the model's decodi
 pipe("The student was interested in Luke 's <predicate> research about see animals .", verb_form="research", predicate_type="nominal", num_beams=3)
 ```
 
+## QASem End-to-End Pipeline
+
+If you wish to parse sentences with QANom and QASrl (contextual or not), you can use `QASemEndToEndPipeline` class from the `qanom.qasem_end_to_end_pipeline` module.
+
+first you should download and unzip the [contextualizer model](https://nlp.biu.ac.il/~pyatkiv/roleqsmodels/question_transformation.tar.gz) and save it in the RoleQgeneration directory.
+
+As qanon pipeline we run the same steps described above, to parse qanom and qasrl
+
+You can also using different flags, to get only qanoms or only qasrl, or both together. Similarly you can ask to get contextualized questions of qanom and/or qasrl using flags.
+
+**Usage Example**
+
+ ```python
+from qanom.qasem_end_to_end_pipeline import QASemEndToEndPipeline
+
+  pipe = QASemEndToEndPipeline(detection_threshold=0.75)  
+  sentences = ["The doctor was interested in Luke 's treatment .", "Tom brings the dog to the park."]
+  outputs = pipe(sentences, return_detection_probability = True,
+                 qasrl = True,
+                 contextual_qasrl = True,
+                 qanom = True,
+                 contextual_qanom = True)
+
+  print(outputs)
+ ```
+Outputs
+ ```python
+  [{'qanom':
+   [{'QAs': [{'question': 'who was treated ?', 
+   'answers': ['Luke'],
+    'contextual_question': 'Who was treated?'}],
+     'predicate_idx': 7, 
+     'predicate': 'treatment', 
+     'predicate_detector_probability': 0.8152085542678833, 
+     'verb_form': 'treat'}],
+      'qasrl': []},
+       
+  {'qanom': [],
+   'qasrl': [{'QAs':
+    [{'question': 'who brings something ?',
+     'answers': ['Tom'],
+      'contextual_question': 'Who brings the dog?'},
+    {'question': ' what does someone bring ?',
+     'answers': ['the dog'],
+      'contextual_question': 'What does Tom bring?'},
+    {'question': ' where does someone bring something ?',
+     'answers': ['to the park'], 
+     'contextual_question': 'Where does Tom bring the dog?'}],
+      'predicate_idx': 1, 
+      'predicate': 'brings', 
+      'verb_form': 'bring'}]}]
+ ```
+
 
 ## Cite
 
