@@ -1,26 +1,27 @@
 from typing import Iterable, Optional
 
 # from qanom.nominalization_detector import NominalizationDetector
-from nominalization_detector import NominalizationDetector
+from qanom.nominalization_detector import NominalizationDetector
 # from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
-from qasrl_seq2seq_pipeline import QASRL_Pipeline
+from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
 import spacy
 
 
 import csv
 import re
 from collections import defaultdict
-from candidate_extraction.candidate_extraction import get_verb_forms_from_lexical_resources
-from RoleQGeneration.srl_as_qa_parser import PropBankRoleFinder
-from RoleQGeneration.question_translation import QuestionTranslator
+from qanom.candidate_extraction.candidate_extraction import get_verb_forms_from_lexical_resources
+from roleqgen.srl_as_qa_parser import PropBankRoleFinder
+from roleqgen.question_translation import QuestionTranslator
 from argparse import ArgumentParser
+import huggingface_hub as HFhub
 
 qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
                 "joint": "kleinay/qanom-seq2seq-model-joint"}  
 
 default_detection_threshold = 0.7
 default_model = "joint"
-transformation_model_path = "/home/nlp/wolhanr/QASem/RoleQGeneration/question_transformation_grammar_corrected_who"
+transformation_model_path = "biu-nlp/contextualizer_qasrl"
 device_number = 0
 
 
@@ -108,7 +109,6 @@ class QASemEndToEndPipeline():
                 predicates_full_infos = []
                 context_samples = []
                 for pred_info in predicate_infos:
-                    questions = {}
                     model_input = self._prepare_input_sentence(sentence, pred_info['predicate_idx'])
                     model_output = self.qa_pipeline(model_input, 
                                                     verb_form=pred_info['verb_form'], 
@@ -146,16 +146,25 @@ class QASemEndToEndPipeline():
 
 
 if __name__ == "__main__":
-    pipe = QASemEndToEndPipeline(detection_threshold=0.75)
-    # sentence = "The construction of the officer 's building finished right after the beginning of the destruction of the previous construction ."
-    # print(pipe([sentence])) 
-    #res1 = pipe(["The student was interested in Luke 's research about see animals ."])#, verb_form="research", predicate_type="nominal")
-    res2 = pipe(["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals ."], contextual_qanom = True)#, verb_form="treat", predicate_type="nominal", num_beams=10)
-    # #res3 = pipe(["A number of professions have developed that specialize in the treatment of mental disorders ."])
-    # # print(res1)
-    print(res2)
-    print('\n')
-    res3 = pipe(['Tom brings the dog to the park.']) 
-    # print(res3)
-    print(res3)   
+    # pipe = QASemEndToEndPipeline(detection_threshold=0.75)
+    # # sentence = "The construction of the officer 's building finished right after the beginning of the destruction of the previous construction ."
+    # # print(pipe([sentence])) 
+    # #res1 = pipe(["The student was interested in Luke 's research about see animals ."])#, verb_form="research", predicate_type="nominal")
+    # res2 = pipe(["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals ."], contextual_qanom = True)#, verb_form="treat", predicate_type="nominal", num_beams=10)
+    # # #res3 = pipe(["A number of professions have developed that specialize in the treatment of mental disorders ."])
+    # # # print(res1)
+    # print(res2)
+    # print('\n')
+    # res3 = pipe(['Tom brings the dog to the park.']) 
+    # # print(res3)
+    # print(res3)  
+    pipe = QASemEndToEndPipeline(detection_threshold=0.75)  
+    sentences = ["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals .", "Tom brings the dog to the park."]
+    outputs = pipe(sentences, return_detection_probability = True,
+                    qasrl = True,
+                    contextual_qasrl = True,
+                    qanom = True,
+                    contextual_qanom = True)
+
+    print(outputs) 
 
