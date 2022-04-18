@@ -16,6 +16,8 @@ from roleqgen.question_translation import QuestionTranslator
 from argparse import ArgumentParser
 import huggingface_hub as HFhub
 
+from spacy.tokenizer import Tokenizer
+
 qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
                 "joint": "kleinay/qanom-seq2seq-model-joint"}  
 
@@ -87,6 +89,8 @@ class QASemEndToEndPipeline():
             # keep dictionary for all the verb in the sentence
             predicate_lists = [[]] * len(sentences) 
             nlp = spacy.load('en_core_web_sm')
+            tokenizer = Tokenizer(nlp.vocab)
+            nlp.tokenizer = tokenizer
             for i, sentence in enumerate(sentences):
                 sentence_nlp = nlp(sentence)
                 target_idxs = []
@@ -159,7 +163,16 @@ if __name__ == "__main__":
     # # print(res3)
     # print(res3)  
     pipe = QASemEndToEndPipeline(detection_threshold=0.75)  
-    sentences = ["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals .", "Tom brings the dog to the park."]
+    # sentences = ["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals .", "Tom brings the dog to the park."]
+    # outputs = pipe(sentences, return_detection_probability = True,
+    #                 qasrl = True,
+    #                 contextual_qasrl = True,
+    #                 qanom = True,
+    #                 contextual_qanom = True)
+
+    # print(outputs) 
+
+    sentences = ["– NFL Network will have live broadcasts of the Raiders’ first three preseason games (blacked out in local markets), and the Raiders’ game in Seattle will be shown locally"]
     outputs = pipe(sentences, return_detection_probability = True,
                     qasrl = True,
                     contextual_qasrl = True,
