@@ -1,3 +1,6 @@
+# QASem - Question-Answer based Semantics 
+
+
 
 ## Pre-requisite
 * Python 3.7
@@ -21,7 +24,7 @@ git clone https://github.com/rubenwol/RoleQGeneration.git
 
 ## End-to-End Pipeline 
 
-If you wish to parse sentences with QASRL and QANom, the best place to start is the `QASemEndToEndPipeline` from the python file [qasem_end_to_end_pipeline.py](https://github.com/kleinay/QASem/blob/main/qasem_end_to_end_pipeline.py). 
+If you wish to parse sentences with QASRL and QANom, the best place to start is the `QASemEndToEndPipeline` from the python file [end_to_end_pipeline.py](https://github.com/kleinay/QASem/blob/main/qasem/end_to_end_pipeline.py). 
 
 Note: Soon, we will also combine QADiscourse (Pytakin et. al., 2020) and other ongoing-work layers of QA-based semantic annotations for adjectives and noun modifiers. 
 
@@ -29,16 +32,16 @@ Note: Soon, we will also combine QADiscourse (Pytakin et. al., 2020) and other o
 **Usage Example**
 
  ```python
-
-  pipe = QASemEndToEndPipeline(detection_threshold=0.75)  
-  sentences = ["The doctor was interested in Luke 's treatment .", "Tom brings the dog to the park."]
-  outputs = pipe(sentences, return_detection_probability = True,
+from qasem.end_to_end_pipeline import QASemEndToEndPipeline 
+pipe = QASemEndToEndPipeline(detection_threshold=0.75)  
+sentences = ["The doctor was interested in Luke 's treatment .", "Tom brings the dog to the park."]
+outputs = pipe(sentences, return_detection_probability = True,
                  qasrl = True,
                  contextual_qasrl = True,
                  qanom = True,
                  contextual_qanom = True)
 
-  print(outputs)
+print(outputs)
  ```
 Outputs
  ```python
