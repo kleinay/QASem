@@ -5,11 +5,9 @@
 ## Installation
 From pypi:
 ```bash
-pip install qanom
+pip install transformers==4.15.0 spacy==2.3.7 qanom 
 pip install git+https://github.com/rubenwol/RoleQGeneration.git
 python -m spacy download en_core_web_sm
-conda install -c conda-forge allennlp=1.2.0rc1
-pip install transformers==4.15.0
 ```
 
 If you want to install from source, clone this repository and then install requirements:
