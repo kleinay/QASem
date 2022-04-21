@@ -18,7 +18,8 @@ setuptools.setup(
     install_requires=[
         'transformers==4.15.0',
         'spacy==2.3.7',
-        'qanom'
+        'qanom',
+        'roleqgen @ git+https://github.com/rubenwol/RoleQGeneration.git@main#egg=RoleQGeneration'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -6,21 +6,31 @@
 * Python 3.7
 
 ## Installation
-From pypi:
+
+The simplest way to get it work is to clone the repo and install using `setup.py`:
+```bash
+git clone https://github.com/rubenwol/RoleQGeneration.git
+cd RoleQGeneration
+pip install -e .
+python -m spacy download en_core_web_sm
+```
+
+If you want to install the dependencies explicitly:
+
 ```bash
 pip install transformers==4.15.0 spacy==2.3.7 qanom 
 pip install git+https://github.com/rubenwol/RoleQGeneration.git
 python -m spacy download en_core_web_sm
 ```
 
-If you want to install from source, clone this repository and then install requirements:
+<!-- If you want to install from source, clone this repository and then install requirements:
 ```bash
 git clone https://github.com/kleinay/QANom.git
 cd QANom
 pip install requirements.txt
 cd ..
-git clone https://github.com/rubenwol/RoleQGeneration.git
-```
+git clone https://github.com/rubenwol/RoleQGeneration.git 
+``` -->
 
 ## End-to-End Pipeline 
 
