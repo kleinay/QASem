@@ -1,4 +1,4 @@
-transformers==4.15.0
-spacy==2.3.7
 qanom
-git+https://github.com/rubenwol/RoleQGeneration@main#egg=RoleQGeneration
+git+https://github.com/rubenwol/RoleQGeneration.git
+transformers==4.15.0
+spacy>=3.0.0

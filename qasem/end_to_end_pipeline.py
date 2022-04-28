@@ -5,7 +5,8 @@ from qanom.nominalization_detector import NominalizationDetector
 # from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
 from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
 import spacy
-
+import nltk
+from nltk.downloader import Downloader
 
 import csv
 import re
@@ -27,28 +28,44 @@ transformation_model_path = "biu-nlp/contextualizer_qasrl"
 device_number = 0
 
 
+# by default, use nltk's default pos_tagger ('averaged_perceptron_tagger'):
+tagger_package = 'averaged_perceptron_tagger'
+nltk_downloader = Downloader()
+if not nltk_downloader.is_installed(tagger_package):
+    nltk.download(tagger_package)
+pos_tag = nltk.pos_tag
+
+
 class QASemEndToEndPipeline():
     """
     This pipeline wraps QAnom pipeline and qasrl pipeline
     """
     def __init__(self, 
                  qanom_model: Optional[str] = None, 
-                 detection_threshold: Optional[float] = None):
+                 detection_threshold: Optional[float] = None,
+                 contextual_qanom=False,
+                 contextual_qasrl=True):
+
         self.predicate_detector = NominalizationDetector()
         self.detection_threshold = detection_threshold or default_detection_threshold
         
         qanom_model = qanom_model or default_model
         model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
         self.qa_pipeline = QASRL_Pipeline(model_url)
-        self.q_translator = QuestionTranslator.from_pretrained(transformation_model_path, device_id=int(device_number))
+
+        self.contextual_qasrl = contextual_qasrl
+        self.contextual_qanom = contextual_qanom
+
+
+        if self.contextual_qasrl or self.contextual_qanom:
+            self.q_translator = QuestionTranslator.from_pretrained(transformation_model_path, device_id=int(device_number))
+
 
     def __call__(self, sentences: Iterable[str], 
-                 detection_threshold = None,
-                 return_detection_probability = True,
-                 qasrl = True,
-                 contextual_qasrl = True,
-                 qanom = True,
-                 contextual_qanom = False,
+                 detection_threshold=None,
+                 return_detection_probability=True,
+                 qasrl=True,
+                 qanom=True,
                  **generate_kwargs):
 
         if qanom:
@@ -68,17 +85,9 @@ class QASemEndToEndPipeline():
                                                     verb_form=pred_info['verb_form'], 
                                                     predicate_type="nominal",
                                                     **generate_kwargs)[0]
-                    if contextual_qanom:
-                    
+                    if self.contextual_qanom:
                         # for contextualization 
-                        for qa in model_output['QAs']:
-                            context_samples.append({'proto_question': qa['question'], 'predicate_lemma': pred_info['verb_form'],
-                                'predicate_span': str(pred_info['predicate_idx'])+':'+str(pred_info['predicate_idx']+1),
-                                'text': sentence})
-
-                        contextualized_questions = self.q_translator.predict(context_samples)
-                        for qa, context_question in zip(model_output['QAs'], contextualized_questions):
-                            qa['contextual_question'] = context_question
+                        self.contextual_qa(model_output, context_samples, pred_info, sentence)
 
                     predicates_full_info = dict(QAs=model_output['QAs'], **pred_info)
                     predicates_full_infos.append(predicates_full_info)
@@ -118,17 +127,10 @@ class QASemEndToEndPipeline():
                                                     verb_form=pred_info['verb_form'], 
                                                     predicate_type="verbal",
                                                     **generate_kwargs)[0]
-                    if contextual_qasrl:
+                    if self.contextual_qasrl:
                         # for contextualization 
-                        for qa in model_output['QAs']:
-                            context_samples.append({'proto_question': qa['question'], 'predicate_lemma': pred_info['verb_form'],
-                                'predicate_span': str(pred_info['predicate_idx'])+':'+str(pred_info['predicate_idx']+1),
-                                'text': sentence})
+                        self.contextual_qa(model_output, context_samples, pred_info, sentence)
 
-                        contextualized_questions = self.q_translator.predict(context_samples)
-                        for qa, context_question in zip(model_output['QAs'], contextualized_questions):
-                            qa['contextual_question'] = context_question
-                    
                     predicates_full_info = dict(QAs=model_output['QAs'], **pred_info)
                     predicates_full_infos.append(predicates_full_info)
                 outputs_qasrl.append(predicates_full_infos)
@@ -147,7 +149,16 @@ class QASemEndToEndPipeline():
         words = words[:predicate_idx] + ["<predicate>"] + words[predicate_idx:] 
         return " ".join(words)
 
+    def contextual_qa(self,model_output, context_samples, pred_info, sentence):
+        for qa in model_output['QAs']:
+            context_samples.append({'proto_question': qa['question'], 'predicate_lemma': pred_info['verb_form'],
+                                    'predicate_span': str(pred_info['predicate_idx']) + ':' + str(
+                                        pred_info['predicate_idx'] + 1),
+                                    'text': sentence})
 
+        contextualized_questions = self.q_translator.predict(context_samples)
+        for qa, context_question in zip(model_output['QAs'], contextualized_questions):
+            qa['contextual_question'] = context_question
 
 if __name__ == "__main__":
     # pipe = QASemEndToEndPipeline(detection_threshold=0.75)
@@ -162,22 +173,19 @@ if __name__ == "__main__":
     # res3 = pipe(['Tom brings the dog to the park.']) 
     # # print(res3)
     # print(res3)  
-    pipe = QASemEndToEndPipeline(detection_threshold=0.75)  
-    # sentences = ["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals .", "Tom brings the dog to the park."]
-    # outputs = pipe(sentences, return_detection_probability = True,
-    #                 qasrl = True,
-    #                 contextual_qasrl = True,
-    #                 qanom = True,
-    #                 contextual_qanom = True)
-
-    # print(outputs) 
-
-    sentences = ["– NFL Network will have live broadcasts of the Raiders’ first three preseason games (blacked out in local markets), and the Raiders’ game in Seattle will be shown locally"]
+    pipe = QASemEndToEndPipeline(detection_threshold=0.75, contextual_qanom = True, contextual_qasrl = True)
+    sentences = ["The doctor was interested in Luke 's treatment .", "The Veterinary student was interested in Luke 's treatment of sea animals .", "Tom brings the dog to the park."]
     outputs = pipe(sentences, return_detection_probability = True,
                     qasrl = True,
-                    contextual_qasrl = True,
-                    qanom = True,
-                    contextual_qanom = True)
+                    qanom = True)
+    #
 
-    print(outputs) 
+    print(outputs)
+
+    # sentences = ["– NFL Network will have live broadcasts of the Raiders’ first three preseason games (blacked out in local markets), and the Raiders’ game in Seattle will be shown locally"]
+    # outputs = pipe(sentences, return_detection_probability = True,
+    #                 qasrl = True,
+    #                 qanom = True)
+
+    # print(outputs)
 

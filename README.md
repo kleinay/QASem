@@ -43,13 +43,11 @@ Note: Soon, we will also combine QADiscourse (Pytakin et. al., 2020) and other o
 
  ```python
 from qasem.end_to_end_pipeline import QASemEndToEndPipeline 
-pipe = QASemEndToEndPipeline(detection_threshold=0.75)  
+pipe = QASemEndToEndPipeline(detection_threshold=0.75, contextual_qanom = True, contextual_qasrl = True)  
 sentences = ["The doctor was interested in Luke 's treatment .", "Tom brings the dog to the park."]
 outputs = pipe(sentences, return_detection_probability = True,
                  qasrl = True,
-                 contextual_qasrl = True,
-                 qanom = True,
-                 contextual_qanom = True)
+                 qanom = True)
 
 print(outputs)
  ```
