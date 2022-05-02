@@ -90,3 +90,12 @@ Outputs
 
 `detection_threshold` is the threshold for the nominalization detection model, where a higher threshold (e.g. `0.8`) means capturing less nominal predicates with higher confidence of them being, in context, verb-derived event markers. Default threshold is `0.7`. 
 
+
+
+## Demo
+
+Check out the [live demo for our joint QASRL-QANom model](https://huggingface.co/spaces/kleinay/qanom-seq2seq-demo)!
+
+If you wish to test the nominalization detection component, see [its own demo here](https://huggingface.co/spaces/kleinay/nominalization-detection-demo), 
+or visit the [QANom End-To-End demo](https://huggingface.co/spaces/kleinay/qanom-end-to-end-demo).
+
