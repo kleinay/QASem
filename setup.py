@@ -17,7 +17,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'transformers==4.15.0',
-        'spacy==2.3.7',
+        'spacy',
         'qanom',
         'roleqgen @ git+https://github.com/rubenwol/RoleQGeneration.git@main#egg=RoleQGeneration'
     ],
