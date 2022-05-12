@@ -1,5 +1,20 @@
 # QASem - Question-Answer based Semantics 
 
+This repository includes software for parsing natural language sentence with various layers of QA-based semantic annotations. 
+We currently support two layers of semantic annotations - QASRL and QANom.
+
+[QASRL (Question Answer driven Semantic Role Labeling)](https://aclanthology.org/D15-1076/) is a lightweight semantic framework for annotating "who did what to whom, how, when and where". 
+For every verb in the sentence, it provides a set of question-answer pairs, where the answer mark a participant of the event denoted by the verb, while the question captures its *semantic role* (that is, what is the role of the participant in the event).
+
+"QANom" stands for "QASRL for Nominalizations", which is an adaptation of QASRL to (deverbal) nominalization. See the [QANom paper](https://aclanthology.org/2020.coling-main.274/) for details about the task. 
+
+You can find more information on [QASRL's official website](https://qasrl.org), including links to all the papers and datasets and a data browsing utility. 
+We also wrapped the datasets into Huggingface Datasets ([QASRL](https://huggingface.co/datasets/kleinay/qa_srl); [QANom](https://huggingface.co/datasets/biu-nlp/qanom)), which are easier to plug-and-play with (check out our [HF profile](https://huggingface.co/biu-nlp) for other related datasets, such as QAMR, QADiscourse, and QA-Align).
+
+
+*Note*: Soon, we will also combine QADiscourse (Pytakin et. al., 2020) and other ongoing-work layers of QA-based semantic annotations for adjectives and noun modifiers. 
+
+
 
 
 ## Pre-requisite
@@ -7,39 +22,32 @@
 
 ## Installation
 
-The simplest way to get it work is to clone the repo and install using `setup.py`:
+We will soon release a first version to pypi.
+But meantime, the simplest way to get it work is to clone the repo and install using `setup.py`:
 ```bash
-git clone https://github.com/rubenwol/RoleQGeneration.git
-cd RoleQGeneration
+git clone https://github.com/kleinay/QASem.git
+cd QASem
 pip install -e .
-python -m spacy download en_core_web_sm
 ```
 
-If you want to install the dependencies explicitly:
-
+Alternatively, If you want to install the dependencies explicitly:
 ```bash
 pip install transformers==4.15.0 spacy==2.3.7 qanom 
 pip install git+https://github.com/rubenwol/RoleQGeneration.git
+```
+
+In addition, you would need to download a spacy model for pre-requisite tokenization & POS-tagging:
+```bash
 python -m spacy download en_core_web_sm
 ```
 
-<!-- If you want to install from source, clone this repository and then install requirements:
-```bash
-git clone https://github.com/kleinay/QANom.git
-cd QANom
-pip install requirements.txt
-cd ..
-git clone https://github.com/rubenwol/RoleQGeneration.git 
-``` -->
-
-## End-to-End Pipeline 
-
-If you wish to parse sentences with QASRL and QANom, the best place to start is the `QASemEndToEndPipeline` from the python file [end_to_end_pipeline.py](https://github.com/kleinay/QASem/blob/main/qasem/end_to_end_pipeline.py). 
-
-Note: Soon, we will also combine QADiscourse (Pytakin et. al., 2020) and other ongoing-work layers of QA-based semantic annotations for adjectives and noun modifiers. 
 
 
-**Usage Example**
+## Usage 
+
+The `QASemEndToEndPipeline` class would, by demand, parse sentences with all semantic annotation layers (currenlty, qasrl and qanom):
+
+**Example**
 
  ```python
 from qasem.end_to_end_pipeline import QASemEndToEndPipeline 
@@ -79,3 +87,15 @@ Outputs
     'predicate': 'brings',
     'verb_form': 'bring'}]}]
  ```
+
+`detection_threshold` is the threshold for the nominalization detection model, where a higher threshold (e.g. `0.8`) means capturing less nominal predicates with higher confidence of them being, in context, verb-derived event markers. Default threshold is `0.7`. 
+
+
+
+## Demo
+
+Check out the [live demo for our joint QASRL-QANom model](https://huggingface.co/spaces/kleinay/qanom-seq2seq-demo)!
+
+If you wish to test the nominalization detection component, see [its own demo here](https://huggingface.co/spaces/kleinay/nominalization-detection-demo), 
+or visit the [QANom End-To-End demo](https://huggingface.co/spaces/kleinay/qanom-end-to-end-demo).
+
