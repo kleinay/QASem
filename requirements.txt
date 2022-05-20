@@ -1,4 +1,3 @@
-qanom
 git+https://github.com/rubenwol/RoleQGeneration.git
 transformers==4.15.0
 spacy>=3.0.0

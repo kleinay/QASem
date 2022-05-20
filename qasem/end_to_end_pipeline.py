@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/Users/rubenwol/PycharmProjects/QANom/')
+
 from typing import Iterable, Optional
 from qanom.nominalization_detector import NominalizationDetector
 from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
@@ -7,6 +10,8 @@ from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
 from typing import List
+
+
 
 qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
                 "joint": "kleinay/qanom-seq2seq-model-joint"}
@@ -57,21 +62,21 @@ class QASemEndToEndPipeline():
                  nominalization_detection_threshold=None,
                  **generate_kwargs):
 
+        sentences_tokens_tags, sentences_pos, sentences_lemma = self.pos_tag_tokens(sentences)
+
+        outputs_nom = [[] for k in range(len(sentences))]
         if 'qanom' in self.annotation_layers:
 
             # get predicates
             threshold = nominalization_detection_threshold or self.nominalization_detection_threshold
-            predicate_lists = self.predicate_detector(sentences,
-                                                                    threshold=threshold,
-                                                                    return_probability=True)
+            predicate_lists = self.predicate_detector(sentences, sentences_tokens_pos=sentences_tokens_tags, threshold=threshold)
             outputs_nom = self.get_qa(sentences, predicate_lists, 'nominal', **generate_kwargs)
 
-
+        outputs_qasrl = [[] for k in range(len(sentences))]
         if 'qasrl' in self.annotation_layers:
-            outputs_qasrl = [[] for k in range(len(sentences))]
             # qasrl detection
             # keep dictionary for all the verb in the sentence
-            predicate_lists = self.predicate_qasrl_detector(sentences)
+            predicate_lists = self.predicate_qasrl_detector(sentences_tokens_tags, sentences_pos, sentences_lemma)
 
             outputs_qasrl = self.get_qa(sentences, predicate_lists, 'verbal', **generate_kwargs)
         
@@ -85,18 +90,19 @@ class QASemEndToEndPipeline():
         return outputs
 
     def get_qa(self, sentences, predicate_lists, predicate_type, **generate_kwargs):
+        
         outputs_qa = [[] for k in range(len(sentences))]
         inputs_to_qa_model, input_sentence_index, inputs_verb_forms, inputs_pred_infos = self._prepare_input_sentences(
             sentences, predicate_lists)
         model_output = self.qa_pipeline(inputs_to_qa_model,
-                                        verb_form=inputs_verb_forms,
+                                        # verb_form=inputs_verb_forms,
+                                        verb_form='',
                                         predicate_type=predicate_type, **generate_kwargs)
 
         if len(inputs_to_qa_model) > 0:
             if self.contextualize:
                 # for contextualization
-                context_samples = []
-                self.contextual_qa(model_output, context_samples, inputs_pred_infos, sentences, input_sentence_index)
+                model_output = self.contextual_qa(model_output, inputs_pred_infos, sentences, input_sentence_index)
 
         # collect QAs for all predicates in sentence
         for model_pred_output, pred_info, sent_index in zip(model_output, inputs_pred_infos, input_sentence_index):
@@ -130,21 +136,37 @@ class QASemEndToEndPipeline():
         return sentences_input, input_sentence_index, input_verbs_form, pred_infos_flatten
 
 
-    def predicate_qasrl_detector(self, sentences):
-
-        predicate_lists = [[]] * len(sentences)
+    def pos_tag_tokens(self, sentences):
         nlp = spacy.load('en_core_web_sm')
         tokenizer = Tokenizer(nlp.vocab)
         nlp.tokenizer = tokenizer
         spacy_parsed_sentences = list(nlp.pipe(sentences))
+        sentences_tokens_tags = []
+        sentences_pos = []
+        sentences_lemma = []
         for i, sentence_nlp in enumerate(spacy_parsed_sentences):
+            tokens_text = [w.text for w in sentence_nlp]
+            tag_sent = [(w.text, w.tag_) for w in sentence_nlp]
+            pos_sent = [(w.text, w.pos_) for w in sentence_nlp]
+            lemma_sent = [w.lemma_ for w in sentence_nlp]
+            token_tag = (tokens_text, tag_sent)
+            sentences_tokens_tags.append(token_tag)
+            sentences_pos.append(pos_sent)
+            sentences_lemma.append(lemma_sent)
+        return sentences_tokens_tags, sentences_pos, sentences_lemma
+
+    def predicate_qasrl_detector(self, sentences_tokens_tags, sentences_pos, sentences_lemma):
+        predicate_lists = [[]] * len(sentences_tokens_tags)
+        for i, sentence_input in enumerate(sentences_tokens_tags):
             target_idxs = []
             verb_forms = []
-            tokens_text = [w.text for w in sentence_nlp]
-            for j, token in enumerate(sentence_nlp):
-                if token.pos_ == 'VERB':
+            pos = sentences_pos[i]
+            tokens_text = sentence_input[0]
+            lemma = sentences_lemma[i]
+            for j, token in enumerate(pos):
+                if token[1] == 'VERB':
                     target_idxs.append(j)
-                    verb_forms.append(token.lemma_)
+                    verb_forms.append(lemma[j])
 
             predicate_lists[i] = [
                 {"predicate_idx": pred_idx,
@@ -155,7 +177,8 @@ class QASemEndToEndPipeline():
         return predicate_lists
 
 
-    def contextual_qa(self,model_output, context_samples, pred_infos, sentences, sentences_index):
+    def contextual_qa(self, model_output, pred_infos, sentences, sentences_index):
+        context_samples = []
         for pred_output, pred_info, sentence_index in zip(model_output, pred_infos, sentences_index):
             for qa in pred_output['QAs']:
                 context_samples.append({'proto_question': qa['question'], 'predicate_lemma': pred_info['verb_form'],
@@ -170,6 +193,7 @@ class QASemEndToEndPipeline():
             for qa in pred_output['QAs']:
                 qa['contextual_question'] = contextualized_questions[i]
                 i += 1
+        return model_output
 
 
 
