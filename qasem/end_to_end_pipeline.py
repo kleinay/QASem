@@ -10,6 +10,7 @@ from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
 from typing import List
+from qa_discourse_pipeline import QADiscourse_Pipeline
 
 
 
@@ -20,7 +21,7 @@ transformation_model_path = "biu-nlp/contextualizer_qasrl"
 
 default_detection_threshold = 0.7
 default_model = "joint"
-default_annotation_layers = ['qanom', 'qasrl']
+default_annotation_layers = ['qanom', 'qasrl', 'qadiscourse']
 
 
 # by default, use nltk's default pos_tagger ('averaged_perceptron_tagger'):
@@ -45,17 +46,19 @@ class QASemEndToEndPipeline():
 
         self.predicate_detector = NominalizationDetector()
         self.nominalization_detection_threshold = nominalization_detection_threshold or default_detection_threshold
-        
+        self.annotation_layers = annotation_layers or default_annotation_layers
         qanom_model = qasrl_model or default_model
         model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
         self.qa_pipeline = QASRL_Pipeline(model_url)
+
+        if 'qadiscourse' in self.annotation_layers:
+            self.qa_discourse_pipeline = QADiscourse_Pipeline("RonEliav/QA_discourse")
 
         self.contextualize = contextualize
 
         if self.contextualize:
             self.q_translator = QuestionTranslator.from_pretrained(transformation_model_path, device_id=device_id)
 
-        self.annotation_layers = annotation_layers or default_annotation_layers
 
 
     def __call__(self, sentences: Iterable[str], 
@@ -79,12 +82,18 @@ class QASemEndToEndPipeline():
             predicate_lists = self.predicate_qasrl_detector(sentences_tokens_tags, sentences_pos, sentences_lemma)
 
             outputs_qasrl = self.get_qa(sentences, predicate_lists, 'verbal', **generate_kwargs)
-        
+
+        outputs_disc = [[] for k in range(len(sentences))]
+        if 'qadiscourse' in self.annotation_layers:
+
+            outputs_disc = self.qa_discourse_pipeline(sentences)
+
         outputs = []
-        for output_nom, output_qasrl in zip(outputs_nom, outputs_qasrl):
+        for output_nom, output_qasrl, output_disc in zip(outputs_nom, outputs_qasrl, outputs_disc):
             outputs.append({ 
                 'qanom': output_nom,
-                'qasrl': output_qasrl
+                'qasrl': output_qasrl,
+                'qadiscourse': output_disc
             })
     
         return outputs
