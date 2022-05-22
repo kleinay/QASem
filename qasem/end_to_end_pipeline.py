@@ -1,5 +1,5 @@
-import sys
-sys.path.append('/Users/rubenwol/PycharmProjects/QANom/')
+# import sys
+# sys.path.append('/Users/rubenwol/PycharmProjects/QANom/')
 
 from typing import Iterable, Optional
 from qanom.nominalization_detector import NominalizationDetector
@@ -10,7 +10,7 @@ from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
 from typing import List
-from qa_discourse_pipeline import QADiscourse_Pipeline
+from qanom.qa_discourse_pipeline import QADiscourse_Pipeline
 
 
 
@@ -90,11 +90,11 @@ class QASemEndToEndPipeline():
 
         outputs = []
         for output_nom, output_qasrl, output_disc in zip(outputs_nom, outputs_qasrl, outputs_disc):
-            outputs.append({ 
-                'qanom': output_nom,
+            d = {'qanom': output_nom,
                 'qasrl': output_qasrl,
-                'qadiscourse': output_disc
-            })
+                'qadiscourse': output_disc}
+            outputs.append({key: value for key, value in d.items() if key in self.annotation_layers})
+
     
         return outputs
 
