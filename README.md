@@ -1,7 +1,7 @@
 # QASem - Question-Answer based Semantics 
 
 This repository includes software for parsing natural language sentence with various layers of QA-based semantic annotations. 
-We currently support two layers of semantic annotations - QASRL and QANom.
+We currently support three layers of semantic annotations - QASRL, QANom, and QADiscourse.
 
 [QASRL (Question Answer driven Semantic Role Labeling)](https://aclanthology.org/D15-1076/) is a lightweight semantic framework for annotating "who did what to whom, how, when and where". 
 For every verb in the sentence, it provides a set of question-answer pairs, where the answer mark a participant of the event denoted by the verb, while the question captures its *semantic role* (that is, what is the role of the participant in the event).
@@ -11,8 +11,9 @@ For every verb in the sentence, it provides a set of question-answer pairs, wher
 You can find more information on [QASRL's official website](https://qasrl.org), including links to all the papers and datasets and a data browsing utility. 
 We also wrapped the datasets into Huggingface Datasets ([QASRL](https://huggingface.co/datasets/kleinay/qa_srl); [QANom](https://huggingface.co/datasets/biu-nlp/qanom)), which are easier to plug-and-play with (check out our [HF profile](https://huggingface.co/biu-nlp) for other related datasets, such as QAMR, QADiscourse, and QA-Align).
 
+[QADiscourse](https://aclanthology.org/2020.emnlp-main.224) annotates intra-sentential discourse relations with question-answer pairs. It focus on discourse relations that carry information, rather than specifying structural or pragmatic properties of the realied sentencs. Each question starts with one of 17 crafted question prefixes, roughly mapped into PDTB relation senses.   
 
-*Note*: Soon, we will also combine QADiscourse (Pytakin et. al., 2020) and other ongoing-work layers of QA-based semantic annotations for adjectives and noun modifiers. 
+*Note*: Soon, we will also combine additional layers of QA-based semantic annotations for adjectives and noun modifiers, currently at the stage of ongoing work. 
 
 
 
@@ -32,7 +33,7 @@ pip install -e .
 
 Alternatively, If you want to install the dependencies explicitly:
 ```bash
-pip install transformers==4.15.0 spacy==2.3.7 qanom 
+pip install transformers==4.15.0 spacy>=2.3.7 qanom 
 pip install git+https://github.com/rubenwol/RoleQGeneration.git
 ```
 
@@ -45,17 +46,16 @@ python -m spacy download en_core_web_sm
 
 ## Usage 
 
-The `QASemEndToEndPipeline` class would, by demand, parse sentences with all semantic annotation layers (currenlty, qasrl and qanom):
+The `QASemEndToEndPipeline` class would, by demand, parse sentences with any of the QASem semantic annotation layers --- currenlty including 'qasrl', 'qanom' and 'qadiscourse'. By default, the pipeline would parse all layers. 
+To specify a subset of desired layers, e.g. QASRL and QADiscourse alone, use `annotation_layers=('qasrl', 'qadiscourse')` in initialization.
 
 **Example**
 
  ```python
 from qasem.end_to_end_pipeline import QASemEndToEndPipeline 
-pipe = QASemEndToEndPipeline(detection_threshold=0.75, contextual_qanom = True, contextual_qasrl = True)  
-sentences = ["The doctor was interested in Luke 's treatment .", "Tom brings the dog to the park."]
-outputs = pipe(sentences, return_detection_probability = True,
-                 qasrl = True,
-                 qanom = True)
+pipe = QASemEndToEndPipeline(annotation_layers=('qasrl', 'qanom', 'qadiscourse'),  nominalization_detection_threshold=0.75, contextualize = True)  
+sentences = ["The doctor was interested in Luke 's treatment as he was not feeling well .", "Tom brings the dog to the park."]
+outputs = pipe(sentences)
 
 print(outputs)
  ```

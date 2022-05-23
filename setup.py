@@ -3,7 +3,8 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-version = "0.0.1"
+with open("qasem/version.txt", "r") as f:
+    version = f.read().strip()
 
 setuptools.setup(
     name="qasem",
@@ -17,7 +18,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'transformers==4.15.0',
-        'spacy',
+        'spacy>=3.0.0',
         'qanom',
         'roleqgen @ git+https://github.com/rubenwol/RoleQGeneration.git@main#egg=RoleQGeneration'
     ],
