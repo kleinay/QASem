@@ -17,7 +17,6 @@ We also wrapped the datasets into Huggingface Datasets ([QASRL](https://huggingf
 
 
 
-
 ## Pre-requisite
 * Python 3.7
 
@@ -54,7 +53,7 @@ To specify a subset of desired layers, e.g. QASRL and QADiscourse alone, use `an
  ```python
 from qasem.end_to_end_pipeline import QASemEndToEndPipeline 
 pipe = QASemEndToEndPipeline(annotation_layers=('qasrl', 'qanom', 'qadiscourse'),  nominalization_detection_threshold=0.75, contextualize = True)  
-sentences = ["The doctor was interested in Luke 's treatment as he was not feeling well .", "Tom brings the dog to the park."]
+sentences = ["The doctor was interested in Luke 's treatment as he was still not feeling well .", "Tom brings the dog to the park."]
 outputs = pipe(sentences)
 
 print(outputs)
@@ -69,9 +68,17 @@ Outputs
     'predicate_idx': 7,
     'predicate': 'treatment',
     'predicate_detector_probability': 0.8152085542678833,
-    'verb_form': 'treat'}],
-  'qasrl': []},
-  
+    'verb_form': 'treat'}
+  ],
+  'qasrl': [
+    ...
+  ],
+  'qadiscourse': [{
+    'question': 'What is the cause of the doctor being interested in Luke 's treatment?',
+    'answer': 'he was still not feeling well'}
+  ]},
+ },
+ 
  {'qanom': [],
   'qasrl': [{'QAs': [
      {'question': 'who brings something ?',
@@ -85,10 +92,13 @@ Outputs
       'contextual_question': 'Where does Tom bring the dog?'}],
     'predicate_idx': 1,
     'predicate': 'brings',
-    'verb_form': 'bring'}]}]
+    'verb_form': 'bring'}]}
+  ],
+  'qadiscourse': []
+ }
  ```
 
-`detection_threshold` is the threshold for the nominalization detection model, where a higher threshold (e.g. `0.8`) means capturing less nominal predicates with higher confidence of them being, in context, verb-derived event markers. Default threshold is `0.7`. 
+`nominalization_detection_threshold` is the threshold for the nominalization detection model, where a higher threshold (e.g. `0.8`) means capturing less nominal predicates with higher confidence of them being, in context, verb-derived event markers. Default threshold is `0.7`. 
 
 
 
@@ -99,3 +109,10 @@ Check out the [live demo for our joint QASRL-QANom model](https://huggingface.co
 If you wish to test the nominalization detection component, see [its own demo here](https://huggingface.co/spaces/kleinay/nominalization-detection-demo), 
 or visit the [QANom End-To-End demo](https://huggingface.co/spaces/kleinay/qanom-end-to-end-demo).
 
+
+
+## Repository for Model Training & Experiments
+
+The underlying QA-SRL and QANom models were trained and evaluated using the code at [qasrl-seq2seq](https://github.com/kleinay/qasrl-seq2seq) repository.
+
+The code for training and evaluating the QADiscourse model will be uploaded soon.
