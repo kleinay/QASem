@@ -1,7 +1,7 @@
 # QASem - Question-Answer based Semantics 
 
 This repository includes software for parsing natural language sentence with various layers of QA-based semantic annotations. 
-We currently support three layers of semantic annotations - QASRL, QANom, and QADiscourse.
+We currently support three layers of semantic annotations - QASRL, QANom, and QADiscourse. See an overview of our approach at our paper on [QASem Parsing](https://arxiv.org/abs/2205.11413). 
 
 [QASRL (Question Answer driven Semantic Role Labeling)](https://aclanthology.org/D15-1076/) is a lightweight semantic framework for annotating "who did what to whom, how, when and where". 
 For every verb in the sentence, it provides a set of question-answer pairs, where the answer mark a participant of the event denoted by the verb, while the question captures its *semantic role* (that is, what is the role of the participant in the event).
