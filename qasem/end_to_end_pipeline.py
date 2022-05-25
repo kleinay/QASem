@@ -10,10 +10,10 @@ from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
 from typing import List
-from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
+from qanom.qa_discourse_pipeline import QADiscourse_Pipeline
 
 
-# Globals - model names
+
 qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
                 "joint": "kleinay/qanom-seq2seq-model-joint"}
 default_qasrl_model = "joint"
@@ -41,7 +41,7 @@ class QASemEndToEndPipeline():
         self.annotation_layers = annotation_layers or default_annotation_layers
         qanom_model = qasrl_model or default_qasrl_model
         qasrl_model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
-        
+
         if 'qasrl' in self.annotation_layers or 'qanom' in self.annotation_layers:
             self.qa_pipeline = QASRL_Pipeline(qasrl_model_url)
 
@@ -164,9 +164,14 @@ class QASemEndToEndPipeline():
             sent_tokens, sent_pos = zip(*sent_tokens_and_poses)
             lemmas = sentences_lemma[i]
             for j, token in enumerate(sent_pos):
-                if token[1] == 'VERB':
+                if token == 'VERB':
                     target_idxs.append(j)
                     verb_forms.append(lemmas[j])
+                elif j != 0 and token == 'ADJ':
+                    if sent_pos[j-1] == 'AUX':
+                        target_idxs.append(j)
+                        verb_forms.append(lemmas[j])
+
 
             predicate_lists[i] = [
                 {"predicate_idx": pred_idx,
