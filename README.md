@@ -18,7 +18,7 @@ We also wrapped the datasets into Huggingface Datasets ([QASRL](https://huggingf
 
 ## Demo
 
-Check out the [live QASem demo] on Huggingface.
+Check out the [live QASem demo](https://huggingface.co/spaces/kleinay/qasem-demo) on Huggingface.
 
 
 
