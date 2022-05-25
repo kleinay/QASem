@@ -10,7 +10,8 @@ from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
 from typing import List
-from qanom.qa_discourse_pipeline import QADiscourse_Pipeline
+
+from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
 
 
 
