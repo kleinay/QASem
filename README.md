@@ -16,14 +16,19 @@ We also wrapped the datasets into Huggingface Datasets ([QASRL](https://huggingf
 *Note*: Soon, we will also combine additional layers of QA-based semantic annotations for adjectives and noun modifiers, currently at the stage of ongoing work. 
 
 
+## Demo
 
-## Pre-requisite
-* Python 3.7
+Check out the [live QASem demo] on Huggingface.
+
+
+
 
 ## Installation
 
+**Pre-requisite**: Python 3.7
+
 We will soon release a first version to pypi.
-But meantime, the simplest way to get it work is to clone the repo and install using `setup.py`:
+Meantime, the simplest way to get it work is to clone the repo and install using `setup.py`:
 ```bash
 git clone https://github.com/kleinay/QASem.git
 cd QASem
@@ -45,10 +50,24 @@ python -m spacy download en_core_web_sm
 
 ## Usage 
 
-The `QASemEndToEndPipeline` class would, by demand, parse sentences with any of the QASem semantic annotation layers --- currenlty including 'qasrl', 'qanom' and 'qadiscourse'. By default, the pipeline would parse all layers. 
+The `QASemEndToEndPipeline` class would, by demand, parse sentences with any of the QASem semantic annotation layers --- currenlty including 'qasrl', 'qanom' and 'qadiscourse'.  
+
+### Features
+
+**Annotation layers:**
+By default, the pipeline would parse all layers.
 To specify a subset of desired layers, e.g. QASRL and QADiscourse alone, use `annotation_layers=('qasrl', 'qadiscourse')` in initialization.
 
-**Example**
+**QA-SRL contextualization:**
+For the sake of generality, QA-SRL and QANom generate ``abstractive'' questions, that replace arguments with placeholders, e.g. "Why was *someone* interested in *something*?". However, in use-cases you might want to have a more natural question with contextualized arguments, e.g. "Why was *the doctor* interested in *Luke 's treatment*?". Utilizing the model from [Pyatkin et. al., 2021](https://aclanthology.org/2021.emnlp-main.108/), one can additionally get contextualized questions for QA-SRL and QANom by setting `QASemEndToEndPipeline(contextualize=True)` (see example below).     
+
+**Nominal predicate detection:**
+`nominalization_detection_threshold` --- which can be set globally in initialization and per `__call__` --- is the threshold for the nominalization detection model.
+A higher threshold (e.g. `0.8`) means capturing less nominal predicates with higher confidence of them being, in context, verb-derived event markers. Default threshold is `0.7`. 
+
+
+
+### Example
 
  ```python
 from qasem.end_to_end_pipeline import QASemEndToEndPipeline 
@@ -97,18 +116,6 @@ Outputs
   'qadiscourse': []
  }
  ```
-
-`nominalization_detection_threshold` is the threshold for the nominalization detection model, where a higher threshold (e.g. `0.8`) means capturing less nominal predicates with higher confidence of them being, in context, verb-derived event markers. Default threshold is `0.7`. 
-
-
-
-## Demo
-
-Check out the [live demo for our joint QASRL-QANom model](https://huggingface.co/spaces/kleinay/qanom-seq2seq-demo)!
-
-If you wish to test the nominalization detection component, see [its own demo here](https://huggingface.co/spaces/kleinay/nominalization-detection-demo), 
-or visit the [QANom End-To-End demo](https://huggingface.co/spaces/kleinay/qanom-end-to-end-demo).
-
 
 
 ## Repository for Model Training & Experiments
