@@ -12,7 +12,7 @@ from spacy.tokenizer import Tokenizer
 from typing import List
 
 from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
-
+from qasem.openie_converter import OpenIEConverter
 
 
 qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
@@ -35,6 +35,7 @@ class QASemEndToEndPipeline():
                  qasrl_model: Optional[str] = None,  # for verbal and nominal predicates
                  nominalization_detection_threshold: Optional[float] = None,
                  contextualize: bool = False,
+                 openie_converter_kwargs = dict(),
                  ):
 
         self.predicate_detector = NominalizationDetector()
@@ -54,10 +55,12 @@ class QASemEndToEndPipeline():
         if self.contextualize:
             self.q_translator = QuestionTranslator.from_pretrained(question_contextualization_model_name)
 
+        self.openie_converter = OpenIEConverter(**openie_converter_kwargs)
 
 
     def __call__(self, sentences: Iterable[str], 
                  nominalization_detection_threshold=None,
+                 output_openie: bool = False,
                  **generate_kwargs):
 
         sentences_tokens_tags, sentences_pos, sentences_lemma = self.pos_tag_tokens(sentences)
@@ -91,6 +94,12 @@ class QASemEndToEndPipeline():
                 'qadiscourse': output_disc}
             outputs.append({key: value for key, value in d.items() if key in self.annotation_layers})
 
+    
+        if output_openie:
+            # convert QA outputs to OpenIE outputs
+            orig_qa_outputs = outputs
+            outputs = [self.openie_converter.convert_single_sentence(sent_info) 
+                       for sent_info in outputs]
     
         return outputs
 
