@@ -60,7 +60,7 @@ class QADiscourse_Pipeline(Text2TextGenerationPipeline):
         return qas
 
     def _split_to_list(self, output_seq: str) -> list:
-        return output_seq.split(self.special_tokens.separator_different_qa)
+        return list(set(output_seq.split(self.special_tokens.separator_different_qa)))
 
             
     def _postrocess_qa(self, seq: str) -> str:

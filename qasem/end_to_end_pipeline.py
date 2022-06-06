@@ -84,6 +84,7 @@ class QASemEndToEndPipeline():
             outputs_disc = self.qa_discourse_pipeline(sentences)
 
         outputs = []
+        # all `outputs_...` objects are lists corresponding to sentences
         for output_nom, output_qasrl, output_disc in zip(outputs_nom, outputs_qasrl, outputs_disc):
             d = {'qanom': output_nom,
                 'qasrl': output_qasrl,
