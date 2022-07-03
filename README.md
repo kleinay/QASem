@@ -13,7 +13,7 @@ We also wrapped the datasets into Huggingface Datasets ([QASRL](https://huggingf
 
 [QADiscourse](https://aclanthology.org/2020.emnlp-main.224) annotates intra-sentential discourse relations with question-answer pairs. It focus on discourse relations that carry information, rather than specifying structural or pragmatic properties of the realied sentencs. Each question starts with one of 17 crafted question prefixes, roughly mapped into PDTB relation senses.   
 
-*Note*: Soon, we will also combine additional layers of QA-based semantic annotations for adjectives and noun modifiers, currently at the stage of ongoing work. 
+*Note*: In the future, we will also combine additional layers of QA-based semantic annotations for adjectives and noun modifiers, currently at the stage of ongoing work. 
 
 
 ## Demo
@@ -65,6 +65,12 @@ For the sake of generality, QA-SRL and QANom generate ``abstractive'' questions,
 `nominalization_detection_threshold` --- which can be set globally in initialization and per `__call__` --- is the threshold for the nominalization detection model.
 A higher threshold (e.g. `0.8`) means capturing less nominal predicates with higher confidence of them being, in context, verb-derived event markers. Default threshold is `0.7`. 
 
+**OpenIE converter:**
+Set `output_openie=True` (in `__call__`) in order to get a reduction of output QAs into Open Information Extraction's tuples format. This option uses the `qasem.openie_converter.OpenIEConverter` class to linearize the arguments along with the predicate by the order of occurrence in the source sentence. 
+The pipeline's output would then be in the form `{"qasem": <regular QA outputs>, "openie": <OpenIE tuple outputs>}`.
+
+By default, only verbal QA-SRL QAs would be converted, but one can also sepcify `layers_included=["qasrl", "qanom"]` when initializing `OpenIEConverter` to also include nominalizations' QAs. 
+You can set arguments for `OpenIEConverter` in the `QASemEndToEndPipeline` constructor using the `openie_converter_kwargs` argument, e.g. `QASemEndToEndPipeline(openie_converter_kwargs={"layers_included": ["qasrl", "qanom"]})`. 
 
 
 ### Example
