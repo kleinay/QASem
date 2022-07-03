@@ -1,7 +1,8 @@
 # QASem - Question-Answer based Semantics 
 
 This repository includes software for parsing natural language sentence with various layers of QA-based semantic annotations. 
-We currently support three layers of semantic annotations - QASRL, QANom, and QADiscourse. See an overview of our approach at our paper on [QASem Parsing](https://arxiv.org/abs/2205.11413). 
+We currently support three layers of semantic annotations - QASRL, QANom, and QADiscourse. 
+See an overview of our approach at our paper on [QASem Parsing](https://arxiv.org/abs/2205.11413). 
 
 [QASRL (Question Answer driven Semantic Role Labeling)](https://aclanthology.org/D15-1076/) is a lightweight semantic framework for annotating "who did what to whom, how, when and where". 
 For every verb in the sentence, it provides a set of question-answer pairs, where the answer mark a participant of the event denoted by the verb, while the question captures its *semantic role* (that is, what is the role of the participant in the event).
@@ -63,7 +64,7 @@ By default, the pipeline would parse all layers.
 To specify a subset of desired layers, e.g. QASRL and QADiscourse alone, use `annotation_layers=('qasrl', 'qadiscourse')` in initialization.
 
 **QA-SRL contextualization:**
-For the sake of generality, QA-SRL and QANom generate ``abstractive'' questions, that replace arguments with placeholders, e.g. "Why was *someone* interested in *something*?". However, in use-cases you might want to have a more natural question with contextualized arguments, e.g. "Why was *the doctor* interested in *Luke 's treatment*?". Utilizing the model from [Pyatkin et. al., 2021](https://aclanthology.org/2021.emnlp-main.108/), one can additionally get contextualized questions for QA-SRL and QANom by setting `QASemEndToEndPipeline(contextualize=True)` (see example below).     
+For the sake of generality, QA-SRL and QANom generate ``abstractive'' questions, that replace arguments with placeholders, e.g. "Why was *someone* interested in *something*?". However, in some use-cases you might want to have a more natural question with contextualized arguments, e.g. "Why was *the doctor* interested in *Luke 's treatment*?". Utilizing the model from [Pyatkin et. al., 2021](https://aclanthology.org/2021.emnlp-main.108/), one can additionally get contextualized questions for QA-SRL and QANom by setting `QASemEndToEndPipeline(contextualize=True)` (see example below).     
 
 **Nominal predicate detection:**
 `nominalization_detection_threshold` --- which can be set globally in initialization and per `__call__` --- is the threshold for the nominalization detection model.
@@ -133,3 +134,14 @@ Outputs
 The underlying QA-SRL and QANom models were trained and evaluated using the code at [qasrl-seq2seq](https://github.com/kleinay/qasrl-seq2seq) repository.
 
 The code for training and evaluating the QADiscourse model will be uploaded soon.
+
+## Cite
+
+```latex
+@article{klein2022qasem,
+  title={QASem Parsing: Text-to-text Modeling of QA-based Semantics},
+  author={Klein, Ayal and Hirsch, Eran and Eliav, Ron and Pyatkin, Valentina and Caciularu, Avi and Dagan, Ido},
+  journal={arXiv preprint arXiv:2205.11413},
+  year={2022}
+}
+```
