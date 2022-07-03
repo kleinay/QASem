@@ -3,7 +3,7 @@ import json
 import itertools 
 
 OIE = Tuple[str, ...]
-default_layers_included = ["qasrl", "qanom"]
+default_layers_included = ["qasrl"]
 
 class OpenIEConverter:
     """
@@ -11,7 +11,7 @@ class OpenIEConverter:
     The OpenIE tuples (=propositions) have >3 slots, where first is subject, 
     second is predicate, and the rest are further arguments. 
     """
-    def __init__(self, layers_included = default_layers_included):
+    def __init__(self, layers_included: List[str] = default_layers_included):
         self.layers_included = layers_included
     
     def convert_qadiscourse_qas(self, qas) -> List[OIE]:
@@ -41,6 +41,19 @@ class OpenIEConverter:
                  for qa in pred_info["QAs"]]
         # sort by first occurrence
         args = list(sorted(args, key=lambda answers: min(t[1] for t in answers)))
+        # omit repetitions (full or partial)
+        def get_answers_without_repetitions(answers: List[Tuple[str, int]]):
+            answers_no_repetitions = answers.copy()
+            i=1
+            while i < len(answers_no_repetitions): 
+                if answers_no_repetitions[i] in answers_no_repetitions[i-1]:
+                    del answers_no_repetitions[i]
+                else:
+                    i += 1
+            return answers_no_repetitions
+        args = [get_answers_without_repetitions(answers) for answers in args]
+
+            
         # omit indices
         args_strs = [[a[0] for a in arg] for arg in args]
         # add predicate to args
