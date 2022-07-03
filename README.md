@@ -27,8 +27,13 @@ Check out the [live QASem demo](https://huggingface.co/spaces/kleinay/qasem-demo
 
 **Pre-requisite**: Python 3.7
 
-We will soon release a first version to pypi.
-Meantime, the simplest way to get it work is to clone the repo and install using `setup.py`:
+Installation is available via pip:
+```bash
+pip install qasem
+```
+
+### Installation from source
+Clone the repo and install using `setup.py`:
 ```bash
 git clone https://github.com/kleinay/QASem.git
 cd QASem
@@ -45,7 +50,6 @@ In addition, you would need to download a spacy model for pre-requisite tokeniza
 ```bash
 python -m spacy download en_core_web_sm
 ```
-
 
 
 ## Usage 
