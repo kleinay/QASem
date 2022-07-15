@@ -1,7 +1,7 @@
 # import sys
 # sys.path.append('/Users/rubenwol/PycharmProjects/QANom/')
 
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Tuple, List, Any, Dict
 from qanom.nominalization_detector import NominalizationDetector
 from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
 import spacy
@@ -14,8 +14,11 @@ from qanom.qa_discourse_pipeline import QADiscourse_Pipeline
 
 
 
-qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
-                "joint": "kleinay/qanom-seq2seq-model-joint"}
+qanom_models = {
+                "baseline": "kleinay/qanom-seq2seq-model-baseline",
+                "joint": "kleinay/qanom-seq2seq-model-joint"
+                }
+
 default_qasrl_model = "joint"
 qadiscourse_model_name = "RonEliav/QA_discourse"
 question_contextualization_model_name = "biu-nlp/contextualizer_qasrl"
@@ -23,7 +26,7 @@ question_contextualization_model_name = "biu-nlp/contextualizer_qasrl"
 # Defaults
 default_annotation_layers = ['qanom', 'qasrl', 'qadiscourse']
 default_nominalization_detection_threshold = 0.7
-
+NO_REPEAT = True
 
 class QASemEndToEndPipeline():
     """
@@ -110,6 +113,10 @@ class QASemEndToEndPipeline():
         # collect QAs for all predicates in sentence
         for model_pred_output, pred_info, sent_index in zip(model_output, inputs_pred_infos, input_sentence_index):
             predicates_full_info = dict(QAs=model_pred_output['QAs'], **pred_info)
+            if NO_REPEAT:
+                for i, qa in enumerate(predicates_full_info['QAs']):
+                    answers_wo_rep = get_answers_without_repetitions(qa['answers'])
+                    predicates_full_info['QAs'][i]['answers'] = answers_wo_rep
             outputs_qa[sent_index].append(predicates_full_info)
 
         return outputs_qa
@@ -220,3 +227,14 @@ def nltk_pos_tag(*inputs):
     if not nltk_downloader.is_installed(tagger_package):
         nltk.download(tagger_package)
     return nltk.pos_tag(*inputs)
+
+
+def get_answers_without_repetitions(answers: List[Tuple[str, int]]):
+    answers_no_repetitions = answers.copy()
+    i = 1
+    while i < len(answers_no_repetitions):
+        if answers_no_repetitions[i] in answers_no_repetitions[i - 1]:
+            del answers_no_repetitions[i]
+        else:
+            i += 1
+    return answers_no_repetitions
