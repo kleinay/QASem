@@ -268,6 +268,16 @@ def nltk_pos_tag(*inputs):
     return nltk.pos_tag(*inputs)
 
 
+def get_answers_without_repetitions(answers: List[Tuple[str, int]]):
+    answers_no_repetitions = answers.copy()
+    i = 1
+    while i < len(answers_no_repetitions):
+        if answers_no_repetitions[i] in answers_no_repetitions[i - 1]:
+            del answers_no_repetitions[i]
+        else:
+            i += 1
+    return answers_no_repetitions
+
 if __name__ == "__main__":
     # from qasem.end_to_end_pipeline import QASemEndToEndPipeline
     pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.8)
