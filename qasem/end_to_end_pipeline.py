@@ -12,14 +12,17 @@ from spacy.tokenizer import Tokenizer
 from typing import List
 from qanom.qa_discourse_pipeline import QADiscourse_Pipeline
 
+from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
+from qasem.openie_converter import OpenIEConverter
 
 
-qanom_models = {
-                "baseline": "kleinay/qanom-seq2seq-model-baseline",
-                "joint": "kleinay/qanom-seq2seq-model-joint"
-                }
-
+qasrl_models = {"baseline": "kleinay/qasrl-seq2seq-model",
+                "joint": "kleinay/qanom-seq2seq-model-joint"}
+qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
+                "joint": "kleinay/qanom-seq2seq-model-joint",
+                "order-invariant": "kleinay/qanom-seq2seq-model-order-invariant"}
 default_qasrl_model = "joint"
+default_qanom_model = "joint"
 qadiscourse_model_name = "RonEliav/QA_discourse"
 question_contextualization_model_name = "biu-nlp/contextualizer_qasrl"
 
@@ -30,23 +33,38 @@ NO_REPEAT = True
 
 class QASemEndToEndPipeline():
     """
-    This pipeline currently wraps QA-SRL, QAnom and QADiscourse pipelines.
+    This pipeline currently wraps QA-SRL, QANom and QADiscourse pipelines.
     """
     def __init__(self,
                  annotation_layers: Optional[List[str]] = None,
-                 qasrl_model: Optional[str] = None,  # for verbal and nominal predicates
+                 qasrl_model: Optional[str] = None,  # for verbal predicates
+                 qanom_model: Optional[str] = None,  # for nominal predicates
                  nominalization_detection_threshold: Optional[float] = None,
                  contextualize: bool = False,
+                 openie_converter_kwargs = dict(),
                  ):
 
         self.predicate_detector = NominalizationDetector()
         self.nominalization_detection_threshold = nominalization_detection_threshold or default_nominalization_detection_threshold
         self.annotation_layers = annotation_layers or default_annotation_layers
-        qanom_model = qasrl_model or default_qasrl_model
-        qasrl_model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
+        qasrl_model = qasrl_model or default_qasrl_model
+        qanom_model = qanom_model or default_qanom_model
+        # Either a name from dict or the actual model name in HF
+        qasrl_model_url = qasrl_models[qasrl_model] if qasrl_model in qasrl_models else qasrl_model
+        qanom_model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
 
-        if 'qasrl' in self.annotation_layers or 'qanom' in self.annotation_layers:
-            self.qa_pipeline = QASRL_Pipeline(qasrl_model_url)
+        # Set `self.qasrl_pipelines` for verbal and/or nominal QASRL
+        if 'qasrl' in self.annotation_layers and 'qanom' in self.annotation_layers \
+                and qasrl_model_url == qanom_model_url:
+            # Default is using the same joint model for verbs and nominalizations (memory efficency)
+            joint_pipe = QASRL_Pipeline(qasrl_model_url)
+            self.qasrl_pipelines = {"verbal": joint_pipe, "nominal": joint_pipe}
+        else:
+            if 'qasrl' in self.annotation_layers:
+                self.qasrl_pipelines = {"verbal": QASRL_Pipeline(qasrl_model_url)}
+            if 'qanom' in self.annotation_layers:
+                self.qasrl_pipelines = {"nominal": QASRL_Pipeline(qasrl_model_url)}
+
 
         if 'qadiscourse' in self.annotation_layers:
             self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name)
@@ -56,11 +74,24 @@ class QASemEndToEndPipeline():
         if self.contextualize:
             self.q_translator = QuestionTranslator.from_pretrained(question_contextualization_model_name)
 
+        self.openie_converter = OpenIEConverter(**openie_converter_kwargs)
 
 
     def __call__(self, sentences: Iterable[str], 
-                 nominalization_detection_threshold=None,
+                 nominalization_detection_threshold: Optional[float] = None,
+                 output_openie: bool = False,
                  **generate_kwargs):
+        """
+        By default, output would be a list in the same size as `sentences`,
+         each item is a dictionary containing all the QAs of the sentence grouped by annotation-layer.
+
+        If `output_openie`, output is in the form `{"qasem": qa_outputs, "openie": oie_outputs}`,
+         where `qa_outputs` is the default QASem output list,
+         and `oie_outputs` is also a `len(sentences)`-sized list, where each item is a list of OpenIE tuples
+         pertaining to a sentence.
+
+        Rest of keyword arguments (`**generate_kwargs`) are passed directly onto `model.generate`.
+        """
 
         sentences_tokens_tags, sentences_pos, sentences_lemma = self.pos_tag_tokens(sentences)
 
@@ -76,7 +107,7 @@ class QASemEndToEndPipeline():
         if 'qasrl' in self.annotation_layers:
             # qasrl detection
             # keep dictionary for all the verb in the sentence
-            predicate_lists = self.predicate_qasrl_detector(sentences_tokens_tags, sentences_pos, sentences_lemma)
+            predicate_lists = self.verbal_predicate_detector(sentences_tokens_tags, sentences_pos, sentences_lemma)
 
             outputs_qasrl = self.get_qasrl_qa(sentences, predicate_lists, 'verbal', **generate_kwargs)
 
@@ -86,6 +117,7 @@ class QASemEndToEndPipeline():
             outputs_disc = self.qa_discourse_pipeline(sentences)
 
         outputs = []
+        # all `outputs_...` objects are lists corresponding to sentences
         for output_nom, output_qasrl, output_disc in zip(outputs_nom, outputs_qasrl, outputs_disc):
             d = {'qanom': output_nom,
                 'qasrl': output_qasrl,
@@ -93,6 +125,13 @@ class QASemEndToEndPipeline():
             outputs.append({key: value for key, value in d.items() if key in self.annotation_layers})
 
     
+        if output_openie:
+            # convert QA outputs to OpenIE outputs
+            qa_outputs = outputs
+            oie_outputs = [self.openie_converter.convert_single_sentence(sent_info, sentence)
+                       for sent_info, sentence in zip(outputs, sentences)]
+            outputs = {"qasem": qa_outputs, "openie": oie_outputs}
+
         return outputs
 
     def get_qasrl_qa(self, sentences, predicate_lists, predicate_type, **generate_kwargs):
@@ -100,7 +139,7 @@ class QASemEndToEndPipeline():
         outputs_qa = [[] for k in range(len(sentences))]
         inputs_to_qa_model, input_sentence_index, inputs_verb_forms, inputs_pred_infos = self._prepare_input_sentences(
             sentences, predicate_lists)
-        model_output = self.qa_pipeline(inputs_to_qa_model,
+        model_output = self.qasrl_pipelines[predicate_type](inputs_to_qa_model,
                                         # verb_form=inputs_verb_forms,
                                         verb_form='',
                                         predicate_type=predicate_type, **generate_kwargs)
@@ -127,7 +166,7 @@ class QASemEndToEndPipeline():
         words = words[:predicate_idx] + ["<predicate>"] + words[predicate_idx:] 
         return " ".join(words)
 
-    def _prepare_input_sentences(self, raw_sentences, predicate_infos_for_sentences):
+    def _prepare_input_sentences(self, raw_sentences: Iterable[str], predicate_infos_for_sentences):
         sentences_input = []
         input_sentence_index = []
         input_verbs_form = []
@@ -163,7 +202,7 @@ class QASemEndToEndPipeline():
             sentences_lemma.append(lemma_sent)
         return sentences_tokens_tags, sentences_pos, sentences_lemma
 
-    def predicate_qasrl_detector(self, sentences_tokens_tags, sentences_pos, sentences_lemma):
+    def verbal_predicate_detector(self, sentences_tokens_tags, sentences_pos, sentences_lemma):
         predicate_lists = [[]] * len(sentences_tokens_tags)
         for i, sent_tokens_and_poses in enumerate(sentences_pos):
             target_idxs = []
@@ -229,12 +268,16 @@ def nltk_pos_tag(*inputs):
     return nltk.pos_tag(*inputs)
 
 
-def get_answers_without_repetitions(answers: List[Tuple[str, int]]):
-    answers_no_repetitions = answers.copy()
-    i = 1
-    while i < len(answers_no_repetitions):
-        if answers_no_repetitions[i] in answers_no_repetitions[i - 1]:
-            del answers_no_repetitions[i]
-        else:
-            i += 1
-    return answers_no_repetitions
+if __name__ == "__main__":
+    # from qasem.end_to_end_pipeline import QASemEndToEndPipeline
+    pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.8)
+    oie_converter = pipe.openie_converter
+    sentences = [s.strip() for s in """
+    He did not return to military life until the outbreak of the revolution in 1775 .
+    Very little further erosion takes place after the formation of a pavement , and the ground becomes stable .
+    Moreover , Russia does not want a division of Ukraine , which could lead NATO to become established within the borders of the ex-USSR , so it is more likely it is seeking to change the facts on the ground so to be able to negotiate from a position of strength .
+    The king was , at first , put off by her strict religious practice , but he warmed to her through her care for his children .
+    An unexpected series of experimental results for the rate of decay of heavy highly charged radioactive ions circulating in a storage ring has provoked theoretical activity in an effort to find a convincing explanation .
+    The President said that he views the achievements of the Paralympics above that of the Olympics , that the Paralympics play a vital role in the lives of the athletes .
+    """.strip().split("\n")]
+    print(pipe(sentences, output_openie=True))

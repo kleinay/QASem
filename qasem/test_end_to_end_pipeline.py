@@ -3,7 +3,7 @@ import spacy
 
 
 if __name__ == "__main__":
-    pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.75, contextualize = True)
+    pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.75, contextualize = False)
     sentences = ["The doctor was very interested in Luke 's treatment as he was not feeling well .", "Tom brings the dog to the park."]
     outputs = pipe(sentences)
     print(outputs)
