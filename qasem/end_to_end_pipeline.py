@@ -226,12 +226,12 @@ class QASemEndToEndPipeline():
                 if token == 'VERB':
                     target_idxs.append(j)
                     verb_forms.append(lemmas[j])
-                elif j != 0 and token == 'ADJ':
-                    k = 1
-                    while sent_pos[j - k] == 'ADV' and j - k > 0: k += 1
-                    if sent_pos[j-k] == 'AUX':
-                        target_idxs.append(j)
-                        verb_forms.append(lemmas[j])
+                # elif j != 0 and token == 'ADJ':
+                #     k = 1
+                #     while sent_pos[j - k] == 'ADV' and j - k > 0: k += 1
+                #     if sent_pos[j-k] == 'AUX':
+                #         target_idxs.append(j)
+                #         verb_forms.append(lemmas[j])
 
 
             predicate_lists[i] = [

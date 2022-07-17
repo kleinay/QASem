@@ -8,7 +8,8 @@ if __name__ == "__main__":
     outputs = pipe(sentences)
     print(outputs)
     # print()
-    sentences = ["the construction of the officer 's building finished right after the beginning of the destruction of the previous construction ."]
+    sentences = ["the ball is red ."]
+    # sentences = ["the construction of the officer 's building finished right after the beginning of the destruction of the previous construction ."]
     # sentences = ["The Veterinary student was interested in Luke 's treatment of sea animals .", "John ate an apple because he was hungry ."]
     outputs = pipe(sentences)
     print(outputs)
