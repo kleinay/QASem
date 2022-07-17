@@ -9,7 +9,7 @@ with open("qasem/version.txt", "r") as f:
 setuptools.setup(
     name="qasem",
     version=version,
-    author="Ayal Klein, Ruben Wolhandler",
+    author="Ayal Klein, Ruben Wolhandler, Ron Eliav",
     author_email="ayal.s.klein@gmail.com",
     description="package for QA-based Semantics - representing textual information via question-answer pairs",
     long_description=long_description,
@@ -22,6 +22,10 @@ setuptools.setup(
         'qanom',
         'roleqgen @ git+https://github.com/rubenwol/RoleQGeneration.git@main#egg=RoleQGeneration'
     ],
+    package_data={
+        "": ["qasem/data/connectives_small_set.txt"],
+    },
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

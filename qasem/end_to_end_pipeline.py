@@ -10,8 +10,6 @@ from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
 from typing import List
-from qanom.qa_discourse_pipeline import QADiscourse_Pipeline
-
 from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
 from qasem.openie_converter import OpenIEConverter
 
@@ -23,7 +21,7 @@ qanom_models = {"baseline": "kleinay/qanom-seq2seq-model-baseline",
                 "order-invariant": "kleinay/qanom-seq2seq-model-order-invariant"}
 default_qasrl_model = "joint"
 default_qanom_model = "joint"
-qadiscourse_model_name = "RonEliav/QA_discourse"
+qadiscourse_model_name = "RonEliav/QA_discourse_v2"
 question_contextualization_model_name = "biu-nlp/contextualizer_qasrl"
 
 # Defaults
@@ -44,14 +42,16 @@ class QASemEndToEndPipeline():
                  openie_converter_kwargs = dict(),
                  ):
 
-        self.predicate_detector = NominalizationDetector()
-        self.nominalization_detection_threshold = nominalization_detection_threshold or default_nominalization_detection_threshold
         self.annotation_layers = annotation_layers or default_annotation_layers
         qasrl_model = qasrl_model or default_qasrl_model
         qanom_model = qanom_model or default_qanom_model
         # Either a name from dict or the actual model name in HF
         qasrl_model_url = qasrl_models[qasrl_model] if qasrl_model in qasrl_models else qasrl_model
         qanom_model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
+        # Init QANom predicate detection model
+        if 'qanom' in self.annotation_layers:
+            self.nominal_predicate_detector = NominalizationDetector()
+            self.nominalization_detection_threshold = nominalization_detection_threshold or default_nominalization_detection_threshold
 
         # Set `self.qasrl_pipelines` for verbal and/or nominal QASRL
         if 'qasrl' in self.annotation_layers and 'qanom' in self.annotation_layers \
@@ -92,30 +92,43 @@ class QASemEndToEndPipeline():
 
         Rest of keyword arguments (`**generate_kwargs`) are passed directly onto `model.generate`.
         """
-
+        # Handle single sentence input
+        if isinstance(sentences, str):
+            res = self([sentences], 
+                 nominalization_detection_threshold=nominalization_detection_threshold,
+                 output_openie=output_openie,
+                 **generate_kwargs
+                 )
+            return res[0] if isinstance(res, list) else res
+        
+        # POS-tag the sentences for extracting different predicate types 
         sentences_tokens_tags, sentences_pos, sentences_lemma = self.pos_tag_tokens(sentences)
 
+        # Now handle each annotation layer one-by-one:
+        
         outputs_nom = [[] for k in range(len(sentences))]
         if 'qanom' in self.annotation_layers:
 
             # get predicates
             threshold = nominalization_detection_threshold or self.nominalization_detection_threshold
-            predicate_lists = self.predicate_detector(sentences, pos_tagged_sentences=sentences_tokens_tags, threshold=threshold)
+            predicate_lists = self.nominal_predicate_detector(sentences, pos_tagged_sentences=sentences_tokens_tags, threshold=threshold)
+            # run QA generation model
             outputs_nom = self.get_qasrl_qa(sentences, predicate_lists, 'nominal', **generate_kwargs)
 
         outputs_qasrl = [[] for k in range(len(sentences))]
         if 'qasrl' in self.annotation_layers:
-            # qasrl detection
-            # keep dictionary for all the verb in the sentence
+            # verbs detection for qasrl (POS-based) - keep dictionary for all the verbs in the sentence
             predicate_lists = self.verbal_predicate_detector(sentences_tokens_tags, sentences_pos, sentences_lemma)
-
+            # run QA geneation model
             outputs_qasrl = self.get_qasrl_qa(sentences, predicate_lists, 'verbal', **generate_kwargs)
 
         outputs_disc = [[] for k in range(len(sentences))]
         if 'qadiscourse' in self.annotation_layers:
-
+            # QADiscourse model is sentence-level, not grouped by predicates 
+            # run qa_discourse pipeline
             outputs_disc = self.qa_discourse_pipeline(sentences)
 
+        # Collect outputs of various annotation layers
         outputs = []
         # all `outputs_...` objects are lists corresponding to sentences
         for output_nom, output_qasrl, output_disc in zip(outputs_nom, outputs_qasrl, outputs_disc):
@@ -124,11 +137,11 @@ class QASemEndToEndPipeline():
                 'qadiscourse': output_disc}
             outputs.append({key: value for key, value in d.items() if key in self.annotation_layers})
 
-    
+        # Open Information Extraction conversion
         if output_openie:
-            # convert QA outputs to OpenIE outputs
-            qa_outputs = outputs
-            oie_outputs = [self.openie_converter.convert_single_sentence(sent_info, sentence)
+            # convert QA outputs to OpenIE tuples
+            qa_outputs = outputs # `outputs` would be a dict including an "openie" section (tuples) beside a "qasem" section (QAs)
+            oie_outputs = [self.openie_converter.convert_single_sentence(sent_info, sentence) 
                        for sent_info, sentence in zip(outputs, sentences)]
             outputs = {"qasem": qa_outputs, "openie": oie_outputs}
 
@@ -279,15 +292,17 @@ def get_answers_without_repetitions(answers: List[Tuple[str, int]]):
     return answers_no_repetitions
 
 if __name__ == "__main__":
-    # from qasem.end_to_end_pipeline import QASemEndToEndPipeline
     pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.8)
-    oie_converter = pipe.openie_converter
-    sentences = [s.strip() for s in """
-    He did not return to military life until the outbreak of the revolution in 1775 .
-    Very little further erosion takes place after the formation of a pavement , and the ground becomes stable .
-    Moreover , Russia does not want a division of Ukraine , which could lead NATO to become established within the borders of the ex-USSR , so it is more likely it is seeking to change the facts on the ground so to be able to negotiate from a position of strength .
-    The king was , at first , put off by her strict religious practice , but he warmed to her through her care for his children .
-    An unexpected series of experimental results for the rate of decay of heavy highly charged radioactive ions circulating in a storage ring has provoked theoretical activity in an effort to find a convincing explanation .
-    The President said that he views the achievements of the Paralympics above that of the Olympics , that the Paralympics play a vital role in the lives of the athletes .
-    """.strip().split("\n")]
+    import sys
+    if len(sys.argv)==1:
+        sentences = [s.strip() for s in """
+        He did not return to military life until the outbreak of the revolution in 1775 .
+        Very little further erosion takes place after the formation of a pavement , and the ground becomes stable .
+        Moreover , Russia does not want a division of Ukraine , which could lead NATO to become established within the borders of the ex-USSR , so it is more likely it is seeking to change the facts on the ground so to be able to negotiate from a position of strength .
+        The king was , at first , put off by her strict religious practice , but he warmed to her through her care for his children .
+        An unexpected series of experimental results for the rate of decay of heavy highly charged radioactive ions circulating in a storage ring has provoked theoretical activity in an effort to find a convincing explanation .
+        The President said that he views the achievements of the Paralympics above that of the Olympics , that the Paralympics play a vital role in the lives of the athletes .
+        """.strip().split("\n")]
+    else:
+        sentences = sys.argv[1:]
     print(pipe(sentences, output_openie=True))
