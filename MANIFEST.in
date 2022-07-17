@@ -1,0 +1,3 @@
+include qasem/data/connectives_small_set.txt
+include qasem/version.txt
+include README.md
