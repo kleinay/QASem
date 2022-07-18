@@ -77,9 +77,12 @@ class QADiscourse_Pipeline(Text2TextGenerationPipeline):
             question, answer = seq.split(self.special_tokens.separator_output_question_answer)
         else:
             return None
-        # Another heuristic filter due to model over-generation -
+        # Heuristic filters applied due to model over-generation -
         #   filter answers that are lexically covered by the question
         if lexical_coverage_ratio(answer, question) >= 0.75:
+            return None
+        #   filter question that are lexically covered (excluding prefix) by the answer
+        if lexical_coverage_ratio(' '.join(question.split()[4:]), answer) >= 0.8:
             return None
         return {"question": question, "answer": answer}
 
