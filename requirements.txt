@@ -1,3 +1,4 @@
-git+https://github.com/rubenwol/RoleQGeneration.git
+# git+https://github.com/rubenwol/RoleQGeneration.git
+roleqgen
 transformers==4.15.0
 spacy>=3.0.0

@@ -20,7 +20,7 @@ setuptools.setup(
         'transformers==4.15.0',
         'spacy>=3.0.0',
         'qanom',
-        'roleqgen @ git+https://github.com/rubenwol/RoleQGeneration.git@main#egg=RoleQGeneration'
+        'roleqgen'
     ],
     package_data={
         "": ["qasem/data/connectives_small_set.txt"],
