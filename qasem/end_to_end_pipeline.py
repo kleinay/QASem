@@ -6,13 +6,13 @@ from qanom.nominalization_detector import NominalizationDetector
 from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
 import spacy
 import nltk
+from tqdm import tqdm
 from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
-from typing import List
 from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
 from qasem.openie_converter import OpenIEConverter
-
+from qasem.utils import ListDataset
 
 qasrl_models = {"baseline": "kleinay/qasrl-seq2seq-model",
                 "joint": "kleinay/qanom-seq2seq-model-joint"}
@@ -80,6 +80,7 @@ class QASemEndToEndPipeline():
     def __call__(self, sentences: Iterable[str], 
                  nominalization_detection_threshold: Optional[float] = None,
                  output_openie: bool = False,
+                 verbose: bool = False,
                  **generate_kwargs):
         """
         By default, output would be a list in the same size as `sentences`,
@@ -111,8 +112,10 @@ class QASemEndToEndPipeline():
 
             # get predicates
             threshold = nominalization_detection_threshold or self.nominalization_detection_threshold
+            if verbose: print(f"Running QANom predicate detection...")
             predicate_lists = self.nominal_predicate_detector(sentences, pos_tagged_sentences=sentences_tokens_tags, threshold=threshold)
             # run QA generation model
+            if verbose: print(f"Running QANom QA-generation...")
             outputs_nom = self.get_qasrl_qa(sentences, predicate_lists, 'nominal', **generate_kwargs)
 
         outputs_qasrl = [[] for k in range(len(sentences))]
@@ -120,12 +123,14 @@ class QASemEndToEndPipeline():
             # verbs detection for qasrl (POS-based) - keep dictionary for all the verbs in the sentence
             predicate_lists = self.verbal_predicate_detector(sentences_tokens_tags, sentences_pos, sentences_lemma)
             # run QA geneation model
+            if verbose: print(f"Running QA-SRL QA-generation...")
             outputs_qasrl = self.get_qasrl_qa(sentences, predicate_lists, 'verbal', **generate_kwargs)
 
         outputs_disc = [[] for k in range(len(sentences))]
         if 'qadiscourse' in self.annotation_layers:
             # QADiscourse model is sentence-level, not grouped by predicates 
             # run qa_discourse pipeline
+            if verbose: print(f"Running QADiscourse QA-generation...")
             outputs_disc = self.qa_discourse_pipeline(sentences)
 
         # Collect outputs of various annotation layers
@@ -152,10 +157,12 @@ class QASemEndToEndPipeline():
         outputs_qa = [[] for k in range(len(sentences))]
         inputs_to_qa_model, input_sentence_index, inputs_verb_forms, inputs_pred_infos = self._prepare_input_sentences(
             sentences, predicate_lists)
-        model_output = self.qasrl_pipelines[predicate_type](inputs_to_qa_model,
+        # Run QA-generation pipeline (invoke inside tqdm to show progress bar)
+        model_output = list(tqdm(self.qasrl_pipelines[predicate_type](ListDataset(inputs_to_qa_model),
                                         # verb_form=inputs_verb_forms,
                                         verb_form='',
-                                        predicate_type=predicate_type, **generate_kwargs)
+                                        predicate_type=predicate_type, 
+                                        **generate_kwargs)))
 
         if len(inputs_to_qa_model) > 0:
             if self.contextualize:
