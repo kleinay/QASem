@@ -35,13 +35,28 @@ class QASemEndToEndPipeline():
     """
     def __init__(self,
                  annotation_layers: Optional[List[str]] = None,
+                 device: int = -1, 
                  qasrl_model: Optional[str] = None,  # for verbal predicates
                  qanom_model: Optional[str] = None,  # for nominal predicates
                  nominalization_detection_threshold: Optional[float] = None,
                  contextualize: bool = False,
-                 openie_converter_kwargs = dict(),
+                 openie_converter_kwargs: Dict[str, Any] = dict(),
                  ):
+        """
 
+        Args:
+            annotation_layers (Optional[List[str]], optional): which QA-based semantic tasks should the output include. 
+                Default includes all available layers (currently "qasrl", "qanom", "qadiscourse").
+            device (int, optional): -1 for CPU (default), >=0 refers to CUDA device ordinal. Defaults to -1.
+            qasrl_model (Optional[str], optional): Underlying verbal QASRL model. Can be a key for `qasrl_models` or a Huggingface Hub URL. 
+                Defaults to "joint".
+            qanom_model (Optional[str], optional): Underlying nominal QASRL (=QANom) model. Can be a key for `qanom_models` or a Huggingface Hub URL. 
+                Defaults to "joint".
+            contextualize (bool, optional): . 
+            openie_converter_kwargs (Dict[str, Any], optional): key-word args to pass to `OpenIEConverter` constructor. Defaults to empty dict().
+        """
+        self.device_int = device # represent device in HF convention
+        self.device_str = f"cuda:{device}" if device>=0 else "cpu" # represent device in pytorch convention
         self.annotation_layers = annotation_layers or default_annotation_layers
         qasrl_model = qasrl_model or default_qasrl_model
         qanom_model = qanom_model or default_qanom_model
@@ -50,24 +65,24 @@ class QASemEndToEndPipeline():
         qanom_model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
         # Init QANom predicate detection model
         if 'qanom' in self.annotation_layers:
-            self.nominal_predicate_detector = NominalizationDetector()
+            self.nominal_predicate_detector = NominalizationDetector(device=device)
             self.nominalization_detection_threshold = nominalization_detection_threshold or default_nominalization_detection_threshold
 
         # Set `self.qasrl_pipelines` for verbal and/or nominal QASRL
         if 'qasrl' in self.annotation_layers and 'qanom' in self.annotation_layers \
                 and qasrl_model_url == qanom_model_url:
             # Default is using the same joint model for verbs and nominalizations (memory efficency)
-            joint_pipe = QASRL_Pipeline(qasrl_model_url)
+            joint_pipe = QASRL_Pipeline(qasrl_model_url, device=device)
             self.qasrl_pipelines = {"verbal": joint_pipe, "nominal": joint_pipe}
         else:
             if 'qasrl' in self.annotation_layers:
-                self.qasrl_pipelines = {"verbal": QASRL_Pipeline(qasrl_model_url)}
+                self.qasrl_pipelines = {"verbal": QASRL_Pipeline(qasrl_model_url, device=device)}
             if 'qanom' in self.annotation_layers:
-                self.qasrl_pipelines = {"nominal": QASRL_Pipeline(qasrl_model_url)}
+                self.qasrl_pipelines = {"nominal": QASRL_Pipeline(qasrl_model_url, device=device)}
 
 
         if 'qadiscourse' in self.annotation_layers:
-            self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name)
+            self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name, device=device)
 
         self.contextualize = contextualize
 
