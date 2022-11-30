@@ -74,7 +74,7 @@ A higher threshold (e.g. `0.8`) means capturing less nominal predicates with hig
 Set `output_openie=True` (in `__call__`) in order to get a reduction of output QAs into Open Information Extraction's tuples format. This option uses the `qasem.openie_converter.OpenIEConverter` class to linearize the arguments along with the predicate by the order of occurrence in the source sentence. 
 The pipeline's output would then be in the form `{"qasem": <regular QA outputs>, "openie": <OpenIE tuple outputs>}`.
 
-By default, only verbal QA-SRL QAs would be converted, but one can also sepcify `layers_included=["qasrl", "qanom"]` when initializing `OpenIEConverter` to also include nominalizations' QAs. 
+By default, only verbal QA-SRL QAs would be converted, but one can specify `layers_included=["qasrl", "qanom"]` when initializing `OpenIEConverter` to also include nominalizations' QAs. 
 You can set arguments for `OpenIEConverter` in the `QASemEndToEndPipeline` constructor using the `openie_converter_kwargs` argument, e.g. `QASemEndToEndPipeline(openie_converter_kwargs={"layers_included": ["qasrl", "qanom"]})`. 
 
 
