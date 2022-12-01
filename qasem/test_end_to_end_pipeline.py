@@ -9,9 +9,17 @@ if __name__ == "__main__":
         "qanom",
         "qadiscourse",
     ]
-    pipe = QASemEndToEndPipeline(layers, device=-1, nominalization_detection_threshold=0.75, contextualize = True)
+    open_ie_kwargs = {
+        "layers_included": ["qasrl", "qanom"],
+        "labeled_adjuncts": True,
+    }
+    pipe = QASemEndToEndPipeline(layers, 
+                                 device=-1, 
+                                 nominalization_detection_threshold=0.75, 
+                                 contextualize = True,
+                                 openie_converter_kwargs=open_ie_kwargs)
     sentences = ["The doctor was very interested in Luke 's treatment as he was not feeling well .", "Tom brings the dog to the park.", "I hate cats."]
-    outputs = pipe(sentences*30, verbose=True)
+    outputs = pipe(sentences, verbose=True, output_openie=True)
     pprint(outputs)
     # print()
     # sentences = ["the ball is red ."]

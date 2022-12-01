@@ -20,7 +20,8 @@ setuptools.setup(
         'transformers==4.15.0',
         'spacy>=3.0.0',
         'qanom',
-        'roleqgen'
+        'roleqgen',
+        'markupsafe==2.0.1', # downgrade because of bug in 2.1.1, https://stackoverflow.com/questions/72191560/importerror-cannot-import-name-soft-unicode-from-markupsafe
     ],
     package_data={
         "": ["qasem/data/connectives_small_set.txt"],
