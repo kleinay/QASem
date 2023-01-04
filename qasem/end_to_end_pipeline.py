@@ -1,4 +1,4 @@
-# import sys
+import sys
 # sys.path.append('/Users/rubenwol/PycharmProjects/QANom/')
 
 from typing import Iterable, Optional, Tuple, List, Any, Dict
@@ -6,13 +6,13 @@ from qanom.nominalization_detector import NominalizationDetector
 from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
 import spacy
 import nltk
+from tqdm import tqdm
 from nltk.downloader import Downloader
 from roleqgen.question_translation import QuestionTranslator
 from spacy.tokenizer import Tokenizer
-from typing import List
 from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
 from qasem.openie_converter import OpenIEConverter
-
+from qasem.utils import ListDataset
 
 qasrl_models = {"baseline": "kleinay/qasrl-seq2seq-model",
                 "joint": "kleinay/qanom-seq2seq-model-joint"}
@@ -35,6 +35,7 @@ class QASemEndToEndPipeline():
     """
     def __init__(self,
                  annotation_layers: Optional[List[str]] = None,
+                 device: int = -1, 
                  qasrl_model: Optional[str] = None,  # for verbal predicates
                  qanom_model: Optional[str] = None,  # for nominal predicates
                  nominalization_detection_threshold: Optional[float] = None,
@@ -42,9 +43,23 @@ class QASemEndToEndPipeline():
                  return_qasrl_slots: bool = False,
                  return_qasrl_discrete_role: bool = True,
                  qasrl_pipeline_kwargs = dict(),
-                 openie_converter_kwargs = dict(),
+                 openie_converter_kwargs: Dict[str, Any] = dict(),
                  ):
+        """
 
+        Args:
+            annotation_layers (Optional[List[str]], optional): which QA-based semantic tasks should the output include. 
+                Default includes all available layers (currently "qasrl", "qanom", "qadiscourse").
+            device (int, optional): -1 for CPU (default), >=0 refers to CUDA device ordinal. Defaults to -1.
+            qasrl_model (Optional[str], optional): Underlying verbal QASRL model. Can be a key for `qasrl_models` or a Huggingface Hub URL. 
+                Defaults to "joint".
+            qanom_model (Optional[str], optional): Underlying nominal QASRL (=QANom) model. Can be a key for `qanom_models` or a Huggingface Hub URL. 
+                Defaults to "joint".
+            contextualize (bool, optional): . 
+            openie_converter_kwargs (Dict[str, Any], optional): key-word args to pass to `OpenIEConverter` constructor. Defaults to empty dict().
+        """
+        self.device_int = device # represent device in HF convention
+        self.device_str = f"cuda:{device}" if device>=0 else "cpu" # represent device in pytorch convention
         self.annotation_layers = annotation_layers or default_annotation_layers
         qasrl_model = qasrl_model or default_qasrl_model
         qanom_model = qanom_model or default_qanom_model
@@ -53,12 +68,13 @@ class QASemEndToEndPipeline():
         qanom_model_url = qanom_models[qanom_model] if qanom_model in qanom_models else qanom_model
         # Init QANom predicate detection model
         if 'qanom' in self.annotation_layers:
-            self.nominal_predicate_detector = NominalizationDetector()
+            self.nominal_predicate_detector = NominalizationDetector(device=device)
             self.nominalization_detection_threshold = nominalization_detection_threshold or default_nominalization_detection_threshold
 
         # Set `self.qasrl_pipelines` for verbal and/or nominal QASRL
         qasrl_pipeline_kwargs = dict(return_question_slots= return_qasrl_slots,
                                      return_question_role= return_qasrl_discrete_role,
+                                     device= device,
                                      **qasrl_pipeline_kwargs)
         
         if 'qasrl' in self.annotation_layers and 'qanom' in self.annotation_layers \
@@ -72,9 +88,8 @@ class QASemEndToEndPipeline():
             if 'qanom' in self.annotation_layers:
                 self.qasrl_pipelines = {"nominal": QASRL_Pipeline(qasrl_model_url, **qasrl_pipeline_kwargs)}
 
-
         if 'qadiscourse' in self.annotation_layers:
-            self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name)
+            self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name, device=device)
 
         self.contextualize = contextualize
         self.return_qasrl_slots = return_qasrl_slots
@@ -89,6 +104,7 @@ class QASemEndToEndPipeline():
     def __call__(self, sentences: Iterable[str], 
                  nominalization_detection_threshold: Optional[float] = None,
                  output_openie: bool = False,
+                 verbose: bool = False,
                  **generate_kwargs):
         """
         By default, output would be a list in the same size as `sentences`,
@@ -120,8 +136,10 @@ class QASemEndToEndPipeline():
 
             # get predicates
             threshold = nominalization_detection_threshold or self.nominalization_detection_threshold
+            if verbose: print(f"Running QANom predicate detection...")
             predicate_lists = self.nominal_predicate_detector(sentences, pos_tagged_sentences=sentences_tokens_tags, threshold=threshold)
             # run QA generation model
+            if verbose: print(f"Running QANom QA-generation...")
             outputs_nom = self.get_qasrl_qa(sentences, predicate_lists, 'nominal', **generate_kwargs)
 
         outputs_qasrl = [[] for k in range(len(sentences))]
@@ -129,12 +147,14 @@ class QASemEndToEndPipeline():
             # verbs detection for qasrl (POS-based) - keep dictionary for all the verbs in the sentence
             predicate_lists = self.verbal_predicate_detector(sentences_tokens_tags, sentences_pos, sentences_lemma)
             # run QA geneation model
+            if verbose: print(f"Running QA-SRL QA-generation...")
             outputs_qasrl = self.get_qasrl_qa(sentences, predicate_lists, 'verbal', **generate_kwargs)
 
         outputs_disc = [[] for k in range(len(sentences))]
         if 'qadiscourse' in self.annotation_layers:
             # QADiscourse model is sentence-level, not grouped by predicates 
             # run qa_discourse pipeline
+            if verbose: print(f"Running QADiscourse QA-generation...")
             outputs_disc = self.qa_discourse_pipeline(sentences)
 
         # Collect outputs of various annotation layers
@@ -161,10 +181,12 @@ class QASemEndToEndPipeline():
         outputs_qa = [[] for k in range(len(sentences))]
         inputs_to_qa_model, input_sentence_index, inputs_verb_forms, inputs_pred_infos = self._prepare_input_sentences(
             sentences, predicate_lists)
-        model_output = self.qasrl_pipelines[predicate_type](inputs_to_qa_model,
+        # Run QA-generation pipeline (invoke inside tqdm to show progress bar)
+        model_output = list(tqdm(self.qasrl_pipelines[predicate_type](ListDataset(inputs_to_qa_model),
                                         # verb_form=inputs_verb_forms,
                                         verb_form='',
-                                        predicate_type=predicate_type, **generate_kwargs)
+                                        predicate_type=predicate_type, 
+                                        **generate_kwargs)))
 
         if len(inputs_to_qa_model) > 0:
             if self.contextualize:
@@ -235,12 +257,12 @@ class QASemEndToEndPipeline():
                 if token == 'VERB':
                     target_idxs.append(j)
                     verb_forms.append(lemmas[j])
-                elif j != 0 and token == 'ADJ':
-                    k = 1
-                    while sent_pos[j - k] == 'ADV' and j - k > 0: k += 1
-                    if sent_pos[j-k] == 'AUX':
-                        target_idxs.append(j)
-                        verb_forms.append(lemmas[j])
+                # elif j != 0 and token == 'ADJ':
+                #     k = 1
+                #     while sent_pos[j - k] == 'ADV' and j - k > 0: k += 1
+                #     if sent_pos[j-k] == 'AUX':
+                #         target_idxs.append(j)
+                #         verb_forms.append(lemmas[j])
 
 
             predicate_lists[i] = [
@@ -274,7 +296,13 @@ class QASemEndToEndPipeline():
 spacy_models = {}
 def get_spacy(lang_model):
     if lang_model not in spacy_models:
-        spacy_models[lang_model] = spacy.load(lang_model)
+        try:
+            nlp = spacy.load(lang_model)
+        except OSError:
+            print(f'Downloading SpaCy model {lang_model} for POS tagging (one-time)...\n', file=sys.stderr)
+            spacy.cli.download(lang_model)
+            nlp = spacy.load(lang_model)
+        spacy_models[lang_model] = nlp
     return spacy_models[lang_model]
 
 def nltk_pos_tag(*inputs):
@@ -301,7 +329,11 @@ def get_answers_without_repetitions(answers: List[Tuple[str, int]]):
     return answers_no_repetitions
 
 if __name__ == "__main__":
-    pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.8)
+    open_ie_kwargs = {
+        "layers_included": ["qasrl", "qanom"],
+        "labeled_adjuncts": True,
+    }
+    pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.8, openie_converter_kwargs=open_ie_kwargs)
     import sys
     if len(sys.argv)==1:
         sentences = [s.strip() for s in """

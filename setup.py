@@ -21,7 +21,8 @@ setuptools.setup(
         'spacy>=3.0.0',
         'qanom>=0.0.30',
         'constrained_decoding',
-        'roleqgen @ git+https://github.com/rubenwol/RoleQGeneration.git@main#egg=RoleQGeneration'
+        'roleqgen',
+        'markupsafe==2.0.1', # downgrade because of bug in 2.1.1, https://stackoverflow.com/questions/72191560/importerror-cannot-import-name-soft-unicode-from-markupsafe
     ],
     package_data={
         "": ["qasem/data/connectives_small_set.txt"],

@@ -25,9 +25,10 @@ def lexical_coverage_ratio(str1: str, str2: str) -> float:
     return len(covered) / len(words1)
 
 class QADiscourse_Pipeline(Text2TextGenerationPipeline):
-    def __init__(self, model_repo: str, **kwargs):
+    def __init__(self, model_repo: str, device=-1, **kwargs):
+        " :param device: -1 for CPU (default), >=0 refers to CUDA device ordinal. "
         model, tokenizer = load_trained_model(model_repo)
-        super().__init__(model, tokenizer, framework="pt")
+        super().__init__(model, tokenizer, device=device, framework="pt")
         self.special_tokens = get_markers_for_model()
         self._update_config(**kwargs)
         self.cand_finder = CandidateFinder()
@@ -77,9 +78,12 @@ class QADiscourse_Pipeline(Text2TextGenerationPipeline):
             question, answer = seq.split(self.special_tokens.separator_output_question_answer)
         else:
             return None
-        # Another heuristic filter due to model over-generation -
+        # Heuristic filters applied due to model over-generation -
         #   filter answers that are lexically covered by the question
         if lexical_coverage_ratio(answer, question) >= 0.75:
+            return None
+        #   filter question that are lexically covered (excluding prefix) by the answer
+        if lexical_coverage_ratio(' '.join(question.split()[4:]), answer) >= 0.8:
             return None
         return {"question": question, "answer": answer}
 
