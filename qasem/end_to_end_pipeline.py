@@ -39,6 +39,9 @@ class QASemEndToEndPipeline():
                  qanom_model: Optional[str] = None,  # for nominal predicates
                  nominalization_detection_threshold: Optional[float] = None,
                  contextualize: bool = False,
+                 return_qasrl_slots: bool = False,
+                 return_qasrl_discrete_role: bool = True,
+                 qasrl_pipeline_kwargs = dict(),
                  openie_converter_kwargs = dict(),
                  ):
 
@@ -54,22 +57,28 @@ class QASemEndToEndPipeline():
             self.nominalization_detection_threshold = nominalization_detection_threshold or default_nominalization_detection_threshold
 
         # Set `self.qasrl_pipelines` for verbal and/or nominal QASRL
+        qasrl_pipeline_kwargs = dict(return_question_slots= return_qasrl_slots,
+                                     return_question_role= return_qasrl_discrete_role,
+                                     **qasrl_pipeline_kwargs)
+        
         if 'qasrl' in self.annotation_layers and 'qanom' in self.annotation_layers \
                 and qasrl_model_url == qanom_model_url:
             # Default is using the same joint model for verbs and nominalizations (memory efficency)
-            joint_pipe = QASRL_Pipeline(qasrl_model_url)
+            joint_pipe = QASRL_Pipeline(qasrl_model_url, **qasrl_pipeline_kwargs)
             self.qasrl_pipelines = {"verbal": joint_pipe, "nominal": joint_pipe}
         else:
             if 'qasrl' in self.annotation_layers:
-                self.qasrl_pipelines = {"verbal": QASRL_Pipeline(qasrl_model_url)}
+                self.qasrl_pipelines = {"verbal": QASRL_Pipeline(qasrl_model_url, **qasrl_pipeline_kwargs)}
             if 'qanom' in self.annotation_layers:
-                self.qasrl_pipelines = {"nominal": QASRL_Pipeline(qasrl_model_url)}
+                self.qasrl_pipelines = {"nominal": QASRL_Pipeline(qasrl_model_url, **qasrl_pipeline_kwargs)}
 
 
         if 'qadiscourse' in self.annotation_layers:
             self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name)
 
         self.contextualize = contextualize
+        self.return_qasrl_slots = return_qasrl_slots
+        self.return_qasrl_discrete_role = return_qasrl_discrete_role
 
         if self.contextualize:
             self.q_translator = QuestionTranslator.from_pretrained(question_contextualization_model_name)

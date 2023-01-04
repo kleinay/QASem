@@ -19,7 +19,8 @@ setuptools.setup(
     install_requires=[
         'transformers==4.15.0',
         'spacy>=3.0.0',
-        'qanom',
+        'qanom>=0.0.30',
+        'constrained_decoding',
         'roleqgen @ git+https://github.com/rubenwol/RoleQGeneration.git@main#egg=RoleQGeneration'
     ],
     package_data={
