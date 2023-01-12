@@ -59,6 +59,9 @@ The `QASemEndToEndPipeline` class would, by demand, parse sentences with any of 
 
 ### Features
 
+**GPU**
+Use `device=d` in initialization to put models and tensors on a GPU device, where `d` is the CUDA device ID. We currently do not support parallelization on multiple GPUs. Defaults to `device=-1`, i.e. CPU.  
+
 **Annotation layers:**
 By default, the pipeline would parse all layers.
 To specify a subset of desired layers, e.g. QASRL and QADiscourse alone, use `annotation_layers=('qasrl', 'qadiscourse')` in initialization.
