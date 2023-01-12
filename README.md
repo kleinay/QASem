@@ -59,7 +59,7 @@ The `QASemEndToEndPipeline` class would, by demand, parse sentences with any of 
 
 ### Features
 
-**GPU**
+**Run on GPU:**
 Use `device=d` in initialization to put models and tensors on a GPU device, where `d` is the CUDA device ID. We currently do not support parallelization on multiple GPUs. Defaults to `device=-1`, i.e. CPU.  
 
 **Annotation layers:**
@@ -68,6 +68,10 @@ To specify a subset of desired layers, e.g. QASRL and QADiscourse alone, use `an
 
 **QA-SRL contextualization:**
 For the sake of generality, QA-SRL and QANom generate ``abstractive'' questions, that replace arguments with placeholders, e.g. "Why was *someone* interested in *something*?". However, in some use-cases you might want to have a more natural question with contextualized arguments, e.g. "Why was *the doctor* interested in *Luke 's treatment*?". Utilizing the model from [Pyatkin et. al., 2021](https://aclanthology.org/2021.emnlp-main.108/), one can additionally get contextualized questions for QA-SRL and QANom by setting `QASemEndToEndPipeline(contextualize=True)` (see example below).     
+
+**QA-SRL Discrete Roles:** In QA-SRL, semantic roles are captured in a rich but soft manner within the questions. For some applications, a reduced discrete account of semantic roles may be desired. By default (`return_qasrl_discrete_role=True` in initialization), we provide a discrete "question-role" label per question in the output, based on a heuristic mapping from the question syntactical structure. For the core arguments, "R0" corresponds to asking about the subject position (commonly equivalent to proto-agent semantic roles), "R1" to direct object (proto-patient), "R2" to a second direct object, and "R2_<preposition>" to an indirect object (e.g. "R2_on" <-> "what did someone put something *on*?"). For modifiers ("where", "when", "how", "why", "how long", "how much") the WH-word (plus, optionally, the preposition) is defining the "question-role". See Table 7 at the [QA-SRL 2015 paper](https://dada.cs.washington.edu/qasrl/docs/emnlp2015_hlz.pdf) for more details about the set of Roles and the heuristic mapping.  
+
+**QA-SRL Question slots:** Set `return_qasrl_slots=True` in initialization to get detailed information about each QA-SRL question. This includes the 7 slots comprising the question, the verb inflection, voice ("is_passive") and negation ("is_negated"). 
 
 **Nominal predicate detection:**
 `nominalization_detection_threshold` --- which can be set globally in initialization and per `__call__` --- is the threshold for the nominalization detection model.
