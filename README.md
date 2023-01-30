@@ -43,7 +43,7 @@ pip install -e .
 
 Alternatively, If you want to install the dependencies explicitly:
 ```bash
-pip install transformers==4.15.0 spacy>=2.3.7 qanom___ 
+pip install transformers==4.15.0 spacy>=2.3.7 qanom 
 pip install git+https://github.com/rubenwol/RoleQGeneration.git
 ```
 
@@ -89,7 +89,7 @@ You can set arguments for `OpenIEConverter` in the `QASemEndToEndPipeline` const
 
  ```python
 from qasem.end_to_end_pipeline import QASemEndToEndPipeline 
-pipe = QASemEndToEndPipeline(annotation_layers=('qasrl', 'qanom___', 'qadiscourse'),  nominalization_detection_threshold=0.75, contextualize = True)  
+pipe = QASemEndToEndPipeline(annotation_layers=('qasrl', 'qanom', 'qadiscourse'),  nominalization_detection_threshold=0.75, contextualize = True)  
 sentences = ["The doctor was interested in Luke 's treatment as he was still not feeling well .", "Tom brings the dog to the park."]
 outputs = pipe(sentences)
 
@@ -97,7 +97,7 @@ print(outputs)
  ```
 Outputs
  ```python
-[{'qanom___': [
+[{'qanom': [
    {'QAs': [{
       'question': 'who was treated ?',
       'answers': ['Luke'],
@@ -116,7 +116,7 @@ Outputs
   ]},
  },
  
- {'qanom___': [],
+ {'qanom': [],
   'qasrl': [{'QAs': [
      {'question': 'who brings something ?',
       'answers': ['Tom'],

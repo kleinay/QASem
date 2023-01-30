@@ -85,11 +85,11 @@ class OpenIEConverter:
     
     def convert_single_sentence(self, sent_info, sentence: str) -> List[OIE]:
         propositions: List[OIE] = []
-        # Collect from QASRL and QANom_ layers
+        # Collect from QASRL and QANom layers
         qasrl_propositions: List[OIE] = []
         qadisc_propositions: List[OIE] = []
         for layer in self.layers_included:
-            if layer in ("qasrl", "qanom___"):
+            if layer in ("qasrl", "qanom"):
                 # iterate verbal/nominal predicates
                 for pred_info in sent_info[layer]:
                     qasrl_propositions.extend(self.convert_single_qasrl_predicate(pred_info, sentence))
