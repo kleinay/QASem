@@ -6,7 +6,7 @@ import spacy
 import nltk
 from tqdm import tqdm
 from nltk.downloader import Downloader
-from qasem.question_translation import QuestionTranslator
+from qasem.question_contextualizer import QuestionContextualizer
 from spacy.tokenizer import Tokenizer
 from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
 from qasem.openie_converter import OpenIEConverter
@@ -94,7 +94,7 @@ class QASemEndToEndPipeline():
         self.return_qasrl_discrete_role = return_qasrl_discrete_role
 
         if self.contextualize:
-            self.q_translator = QuestionTranslator.from_pretrained(question_contextualization_model_name, device_id=device)
+            self.q_translator = QuestionContextualizer.from_pretrained(question_contextualization_model_name, device_id=device)
 
         self.openie_converter = OpenIEConverter(**openie_converter_kwargs)
 
@@ -181,10 +181,11 @@ class QASemEndToEndPipeline():
             sentences, predicate_lists)
         # Run QA-generation pipeline (invoke inside tqdm to show progress bar)
         model_output = list(tqdm(self.qasrl_pipelines[predicate_type](ListDataset(inputs_to_qa_model),
-                                        # verb_form=inputs_verb_forms,
-                                        verb_form='',
+                                        verb_form=inputs_verb_forms,
+                                        # verb_form='',
                                         predicate_type=predicate_type, 
                                         **generate_kwargs)))
+
 
         if len(inputs_to_qa_model) > 0:
             if self.contextualize:

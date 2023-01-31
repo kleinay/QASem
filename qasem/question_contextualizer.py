@@ -18,7 +18,7 @@ TOK_ARGS = {
 }
 
 
-class QuestionTranslator:
+class QuestionContextualizer:
     def __init__(self, gen_model: PreTrainedModel, tokenizer: PreTrainedTokenizer, device):
         self.gen_model = gen_model
         self.tokenizer = tokenizer
