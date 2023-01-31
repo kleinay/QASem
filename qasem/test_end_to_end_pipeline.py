@@ -14,10 +14,11 @@ if __name__ == "__main__":
         "labeled_adjuncts": True,
     }
     pipe = QASemEndToEndPipeline(layers, 
-                                 device=-1, 
-                                 nominalization_detection_threshold=0.75, 
-                                 contextualize = True,
+                                 device=-1,
+                                 nominalization_detection_threshold=0.75,
+                                 contextualize=True,
                                  openie_converter_kwargs=open_ie_kwargs)
+    sentences = ["The models went through various mutations"]
     sentences = ["The doctor was very interested in Luke 's treatment as he was not feeling well .", "Tom brings the dog to the park.", "I hate cats."]
     outputs = pipe(sentences, verbose=True, output_openie=True)
     pprint(outputs)
