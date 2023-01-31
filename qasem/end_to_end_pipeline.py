@@ -26,6 +26,7 @@ question_contextualization_model_name = "biu-nlp/contextualizer_qasrl"
 default_annotation_layers = ['qanom', 'qasrl', 'qadiscourse']
 default_nominalization_detection_threshold = 0.7
 NO_REPEAT = True
+DEFAULT_SPACY_MODEL = 'en_core_web_sm'
 
 class QASemEndToEndPipeline():
     """
@@ -40,6 +41,7 @@ class QASemEndToEndPipeline():
                  contextualize: bool = False,
                  return_qasrl_slots: bool = False,
                  return_qasrl_discrete_role: bool = True,
+                 spacy_model: Optional[str] = None,
                  qasrl_pipeline_kwargs = dict(),
                  openie_converter_kwargs: Dict[str, Any] = dict(),
                  ):
@@ -92,6 +94,7 @@ class QASemEndToEndPipeline():
         self.contextualize = contextualize
         self.return_qasrl_slots = return_qasrl_slots
         self.return_qasrl_discrete_role = return_qasrl_discrete_role
+        self.spacy_model_name = spacy_model or DEFAULT_SPACY_MODEL
 
         if self.contextualize:
             self.q_translator = QuestionContextualizer.from_pretrained(question_contextualization_model_name, device_id=device)
@@ -229,7 +232,7 @@ class QASemEndToEndPipeline():
 
 
     def pos_tag_tokens(self, sentences):
-        nlp = get_spacy('en_core_web_sm')
+        nlp = get_spacy(self.spacy_model_name)
         tokenizer = Tokenizer(nlp.vocab)
         nlp.tokenizer = tokenizer
         spacy_parsed_sentences = list(nlp.pipe(sentences))
