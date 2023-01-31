@@ -185,7 +185,6 @@ class QASemEndToEndPipeline():
         # Run QA-generation pipeline (invoke inside tqdm to show progress bar)
         model_output = list(tqdm(self.qasrl_pipelines[predicate_type](ListDataset(inputs_to_qa_model),
                                         verb_form=inputs_verb_forms,
-                                        # verb_form='',
                                         predicate_type=predicate_type, 
                                         **generate_kwargs)))
 

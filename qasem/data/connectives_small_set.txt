@@ -1,0 +1,164 @@
+accordingly	contingency.cause.result
+additionally	expansion.conjunction
+after	temporal.asynchronous.succession
+afterwards	temporal.asynchronous.precedence
+albeit	comparison.concession
+along with	expansion.conjunction
+also	expansion.conjunction
+alternatively	expansion.disjunction
+although	comparison.concession
+and	expansion.conjunction
+and then	expansion.disjunction
+and/or	expansion.disjunction
+as a result	contingency.cause.result
+as an alternative	expansion.disjunction
+as if	comparison.similarity	expansion.manner
+as long as	contingency.condition
+as much as	comparison.concession
+as soon as	temporal.asynchronous.succession
+as though	expansion.level-of-detail	comparison.similarity	expansion.manner
+as well	expansion.conjunction
+as well as	expansion.conjunction
+at the same time	temporal.synchronous
+because	contingency.cause.reason
+because of	contingeny.cause.reason
+before	temporal.asynchronous.precedence
+before and after	temporal.asynchronous.succession	temporal.asynchronous.precedence
+besides	expansion.conjunction
+beyond	expansion.conjunction
+both and	expansion.conjunction
+but	comparison.concession
+but also	expansion.conjunction
+but then	comparison.concession
+but then again	comparison.concession
+by comparison	comparison.contrast
+by contrast	comparison.contrast
+by then	temporal.asynchronous.succession	contingency.cause.reason
+consequently	contingency.cause.result
+conversely	contingency.cause.result
+depending on	contingency.condition
+depending upon	contingency.condition
+despite	comparison.concession
+due to	contingency.cause.reason
+earlier	temporal.asynchronous.succession
+either or	expansion.disjunction
+else	contingency.negative-condition
+even after	temporal.asynchronous.succession	comparison.concession
+even as	comparison.concession	temporal.synchronous
+even before	temporal.asynchronous.precedence	comparison.concession
+even before then	comparison.concession	comparison.concession
+even if	comparison.concession
+even so	comparison.concession
+even then	temporal.asynchronous.precedence	comparison.concession
+even though	comparison.concession
+even when	comparison.concession
+even while	temporal.synchronous	comparison.concession
+even with	comparison.concession
+except	expansion.exception
+finally	expansion.conjunction
+for example	expansion.instantiation
+for instance	expansion.instantiation
+further	expansion.conjunction
+furthermore	expansion.conjunction
+given	contingency.cause.reason
+hence	contingency.cause.result
+however	comparison.concession
+if	contingency.condition
+if and when	contingency.condition
+if only	contingency.condition
+if then	contingency.condition
+in addition	expansion.conjunction
+in any case	comparison.concession
+in case	contingency.condition
+in contrast	comparison.contrast
+in fact	expansion.conjunction
+in order	contingency.purpose
+in other words	expansion.equivalence
+in particular	expansion.level-of-detail
+in short	expansion.level-of-detail
+in sum	expansion.level-of-detail
+in that	expansion.level-of-detail
+in the end	temporal.asynchronous.precedence
+in the meantime	temporal.synchronous
+in the meanwhile	temporal.synchronous
+indeed	expansion.conjunction
+insofar as	contingency.cause.reason	expansion.level-of-detail
+instead	expansion.substitution
+instead of	expansion.substitution
+later	temporal.asynchronous.precedence
+later on	temporal.asynchronous.precedence
+lest	contingency.negative-condition
+like	comparison.similarity
+likewise	expansion.conjunction
+meantime	temporal.synchronous
+meanwhile	temporal.synchronous
+more accurately	expansion.substitution
+moreover	expansion.conjunction
+much less	expansion.conjunction
+neither nor	expansion.conjunction
+nevertheless	comparison.concession
+next	temporal.asynchronous.precedence
+no matter	comparison.concession
+nonetheless	comparison.concession
+nor	expansion.conjunction
+not just but	expansion.conjunction
+not just but also	expansion.conjunction
+not only	expansion.conjunction
+not only also	expansion.conjunction
+not only because of	contingency.cause.reason
+not only but	expansion.conjunction
+not only but also	expansion.conjunction
+not so much as	expansion.substitution
+now that	contingency.cause.reason
+on the contrary	comparison.contrast
+on the one hand on the other	comparison.contrast
+on the one hand on the other hand	comparison.concession
+on the other hand	comparison.contrast
+once	temporal.asynchronous.succession
+only	expansion.exception
+only if	contingency.condition
+or	expansion.disjunction
+or otherwise	expansion.disjunction
+otherwise	expansion.exception
+plus	expansion.conjunction
+previously	temporal.asynchronous.succession
+rather	expansion.substitution
+rather than	expansion.substitution
+regardless	comparison.concession
+regardless of	comparison.concession
+separately	expansion.conjunction
+similarly	comparison.similarity
+simultaneously	temporal.synchronous
+since	contingency.cause.reason
+since before	temporal.asynchronous.succession
+so	contingency.cause.result
+so as	contingency.purpose
+as long as	contingency.condition
+so much as	expansion.substitution
+so that	contingency.purpose
+specifically	expansion.level-of-detail
+still	comparison.concession
+subsequently	temporal.asynchronous.precedence
+such as	expansion.instantiation
+that is	expansion.equivalence	expansion.level-of-detail
+then	temporal.asynchronous.precedence
+thereafter	temporal.asynchronous.precedence
+thereby	contingency.cause.result
+therefore	contingency.cause.result
+though	comparison.concession
+thus	contingency.cause.result
+till	temporal.asynchronous.precedence
+ultimately	temporal.asynchronous.precedence
+unless	contingency.negative-condition
+until	temporal.asynchronous.precedence
+upon	temporal.synchronous	contingency.cause.reason
+whatever	comparison.concession
+when	temporal.synchronous
+when and if	temporal.asynchronous.succession	contingency.condition
+whenever	contingency.condition
+where	contingency.condition
+whereas	comparison.contrast
+whether	comparison.concession
+while	comparison.concession
+without	expansion.manner
+yet	comparison.concession
