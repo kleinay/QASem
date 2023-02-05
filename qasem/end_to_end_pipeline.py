@@ -26,7 +26,7 @@ question_contextualization_model_name = "biu-nlp/contextualizer_qasrl"
 default_annotation_layers = ['qanom', 'qasrl', 'qadiscourse']
 default_nominalization_detection_threshold = 0.7
 NO_REPEAT = True
-DEFAULT_SPACY_MODEL = 'en_core_web_sm'
+DEFAULT_SPACY_MODEL = 'en_core_web_trf'
 
 class QASemEndToEndPipeline():
     """
