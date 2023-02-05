@@ -256,6 +256,8 @@ class QASemEndToEndPipeline():
             lemmas = sentences_lemma[i]
             for j, token in enumerate(sent_pos):
                 if token == 'VERB':
+                    if lemmas[j] == 'be':
+                        continue
                     target_idxs.append(j)
                     verb_forms.append(lemmas[j])
                 # elif j != 0 and token == 'ADJ':
@@ -336,7 +338,7 @@ if __name__ == "__main__":
     }
     pipe = QASemEndToEndPipeline(nominalization_detection_threshold=0.8, openie_converter_kwargs=open_ie_kwargs)
     import sys
-    if len(sys.argv)==1:
+    if len(sys.argv) == 1:
         sentences = [s.strip() for s in """
         He did not return to military life until the outbreak of the revolution in 1775 .
         Very little further erosion takes place after the formation of a pavement , and the ground becomes stable .

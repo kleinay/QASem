@@ -9,4 +9,3 @@ class ListDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, i):
         return self.original_list[i]
-    

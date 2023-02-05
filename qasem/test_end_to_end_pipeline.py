@@ -18,7 +18,7 @@ if __name__ == "__main__":
                                  nominalization_detection_threshold=0.5,
                                  contextualize=True,
                                  openie_converter_kwargs=open_ie_kwargs)
-    sentences = ["The models went through various mutations"]
+    sentences = ["We made a very clear commitment : if there is any proposal in the next parliament for a transfer of powers to Brussels ( the EU ) we will have an in/out referendum ."]
     # sentences = ["The doctor was very interested in Luke 's treatment as he was not feeling well .", "Tom brings the dog to the park.", "I hate cats."]
     outputs = pipe(sentences, verbose=True, output_openie=True)
     pprint(outputs)
