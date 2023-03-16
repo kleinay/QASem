@@ -1,9 +1,9 @@
 from typing import Optional 
-import spacy
 import codecs
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 from collections import defaultdict
 from qasem import data_dir
+from qasem.spacy_loader import get_spacy
 
 connective_file_default_path = data_dir / "connectives_small_set.txt"
 
@@ -75,7 +75,7 @@ class CandidateFinder():
         conn_file = conn_file or connective_file_default_path
         self.connectives = get_connectives(conn_file)
         self.detokenizer = TreebankWordDetokenizer()
-        self.nlp = spacy.load("en_core_web_sm")
+        self.nlp = get_spacy()
         self.covered = defaultdict(lambda : '')
         
         

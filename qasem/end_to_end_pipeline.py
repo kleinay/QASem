@@ -2,12 +2,13 @@ import sys
 from typing import Iterable, Optional, Tuple, List, Any, Dict
 from qanom.nominalization_detector import NominalizationDetector
 from qanom.qasrl_seq2seq_pipeline import QASRL_Pipeline
-import spacy
+
 import nltk
 from tqdm import tqdm
 from nltk.downloader import Downloader
 from qasem.question_contextualizer import QuestionContextualizer
 from spacy.tokenizer import Tokenizer
+from qasem.spacy_loader import get_spacy
 from qasem.qa_discourse_pipeline import QADiscourse_Pipeline
 from qasem.openie_converter import OpenIEConverter
 from qasem.utils import ListDataset
@@ -295,18 +296,6 @@ class QASemEndToEndPipeline():
                 i += 1
         return model_output
 
-# Keep spacy model a global singleton
-spacy_models = {}
-def get_spacy(lang_model):
-    if lang_model not in spacy_models:
-        try:
-            nlp = spacy.load(lang_model)
-        except OSError:
-            print(f'Downloading SpaCy model {lang_model} for POS tagging (one-time)...\n', file=sys.stderr)
-            spacy.cli.download(lang_model)
-            nlp = spacy.load(lang_model)
-        spacy_models[lang_model] = nlp
-    return spacy_models[lang_model]
 
 def nltk_pos_tag(*inputs):
     """

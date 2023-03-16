@@ -6,8 +6,6 @@ from transformers import Text2TextGenerationPipeline, AutoModelForSeq2SeqLM, Aut
 default_model_name = "leonpes/qaadj_parser"
 default_tokenizer_name = "t5-base"
 
-DEFAULT_SPACY_MODEL = 'en_core_web_trf'
-
 class QAAdj_Pipeline(Text2TextGenerationPipeline):
     """ 
     Given and adjectival predicate, predicts QAs corresponding to the Object, Domain, Reference, and Degree of the adjective.
@@ -15,7 +13,7 @@ class QAAdj_Pipeline(Text2TextGenerationPipeline):
     e.g. "A [PRED] female [PRED] teacher...". 
     """
     ROLES = ('object', 'comparison', 'domain', 'extent')
-    def __init__(self, model_repo: Optional[str] = None, device=-1, spacy_model: Optional[str] = None, **kwargs):
+    def __init__(self, model_repo: Optional[str] = None, device=-1, **kwargs):
         " :param device: -1 for CPU (default), >=0 refers to CUDA device ordinal. "
         if model_repo is None:
             model = AutoModelForSeq2SeqLM.from_pretrained(default_model_name)
