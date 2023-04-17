@@ -26,7 +26,7 @@ Check out the [live QASem demo](https://huggingface.co/spaces/kleinay/qasem-demo
 
 ## Installation
 
-**Pre-requisite**: Python 3.7
+**Pre-requisite**: Python 3.8 (as of version 0.2.0; before that - Python 3.7)
 
 Installation is available via pip:
 ```bash

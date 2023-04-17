@@ -17,11 +17,11 @@ setuptools.setup(
     url="https://github.com/kleinay/QASem",
     packages=setuptools.find_packages(),
     install_requires=[
-        'transformers==4.15.0',
-        'spacy>=3.0.0',
         'qanom>=0.0.31',
-        'constrained_decoding',
-        'markupsafe==2.0.1', # downgrade because of bug in 2.1.1, https://stackoverflow.com/questions/72191560/importerror-cannot-import-name-soft-unicode-from-markupsafe
+        'transformers>=4.15.0',
+        'spacy>=3.0.0,<4.0',
+        # 'constrained_decoding',
+        # 'markupsafe==2.1.2', # downgrade because of bug in 2.1.1, https://stackoverflow.com/questions/72191560/importerror-cannot-import-name-soft-unicode-from-markupsafe
     ],
     package_data={
         "": ["qasem/data/connectives_small_set.txt"],
