@@ -71,11 +71,11 @@ def splitter(splittoken, mylist, post = True, add_white_sp = False):
     
 class CandidateFinder():
 
-    def __init__(self, conn_file: Optional[str] = None):
+    def __init__(self, conn_file: Optional[str] = None, spacy_model: Optional[str] = None):
         conn_file = conn_file or connective_file_default_path
         self.connectives = get_connectives(conn_file)
         self.detokenizer = TreebankWordDetokenizer()
-        self.nlp = get_spacy()
+        self.nlp = get_spacy(spacy_model)
         self.covered = defaultdict(lambda : '')
         
         

@@ -27,7 +27,7 @@ question_contextualization_model_name = "biu-nlp/contextualizer_qasrl"
 default_annotation_layers = ['qanom', 'qasrl', 'qadiscourse']
 default_nominalization_detection_threshold = 0.7
 NO_REPEAT = True
-DEFAULT_SPACY_MODEL = 'en_core_web_trf'
+DEFAULT_SPACY_MODEL = 'en_core_web_lg'
 
 class QASemEndToEndPipeline():
     """
@@ -61,6 +61,7 @@ class QASemEndToEndPipeline():
         """
         self.device_int = device # represent device in HF convention
         self.device_str = f"cuda:{device}" if device >= 0 else "cpu"# represent device in pytorch convention
+        self.spacy_model_name = spacy_model or DEFAULT_SPACY_MODEL
         self.annotation_layers = annotation_layers or default_annotation_layers
         qasrl_model = qasrl_model or default_qasrl_model
         qanom_model = qanom_model or default_qanom_model
@@ -90,12 +91,13 @@ class QASemEndToEndPipeline():
                 self.qasrl_pipelines = {"nominal": QASRL_Pipeline(qasrl_model_url, **qasrl_pipeline_kwargs)}
 
         if 'qadiscourse' in self.annotation_layers:
-            self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name, device=device)
+            self.qa_discourse_pipeline = QADiscourse_Pipeline(qadiscourse_model_name, 
+                                                              device=device, 
+                                                              spacy_model=self.spacy_model_name)
 
         self.contextualize = contextualize
         self.return_qasrl_slots = return_qasrl_slots
         self.return_qasrl_discrete_role = return_qasrl_discrete_role
-        self.spacy_model_name = spacy_model or DEFAULT_SPACY_MODEL
 
         if self.contextualize:
             self.q_translator = QuestionContextualizer.from_pretrained(question_contextualization_model_name, device_id=device)

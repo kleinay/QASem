@@ -1,3 +1,4 @@
+from typing import Optional
 from argparse import Namespace
 from transformers import Text2TextGenerationPipeline, AutoModelForSeq2SeqLM, AutoTokenizer
 from qasem.candidates_finder import CandidateFinder
@@ -25,13 +26,13 @@ def lexical_coverage_ratio(str1: str, str2: str) -> float:
     return len(covered) / len(words1)
 
 class QADiscourse_Pipeline(Text2TextGenerationPipeline):
-    def __init__(self, model_repo: str, device=-1, **kwargs):
+    def __init__(self, model_repo: str, device=-1, spacy_model: Optional[str] = None, **kwargs):
         " :param device: -1 for CPU (default), >=0 refers to CUDA device ordinal. "
         model, tokenizer = load_trained_model(model_repo)
         super().__init__(model, tokenizer, device=device, framework="pt")
         self.special_tokens = get_markers_for_model()
         self._update_config(**kwargs)
-        self.cand_finder = CandidateFinder()
+        self.cand_finder = CandidateFinder(spacy_model=spacy_model)
 
     def _update_config(self, **kwargs):
         " Update self.model.config with initialization parameters and necessary defaults. "
