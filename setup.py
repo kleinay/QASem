@@ -17,7 +17,7 @@ setuptools.setup(
     url="https://github.com/kleinay/QASem",
     packages=setuptools.find_packages(),
     install_requires=[
-        'qanom>=0.0.31',
+        'qanom>=0.0.32',
         'transformers>=4.15.0',
         'spacy>=3.0.0,<4.0',
         # 'constrained_decoding',
